@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>calltimer.co</title>
+    <title>CallTimer</title>
     <meta name="description" content="Track call sessions, individual calls, and break time">
     <meta name="theme-color" content="#613fb4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -484,6 +484,36 @@
             font-style: italic;
         }
 
+        .footer {
+            margin-top: 3em;
+            padding-top: 2em;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.85em;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer:hover {
+            opacity: 1;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-divider {
+            display: inline-block;
+            margin: 0 0.5em;
+            color: #d1d5db;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 1.5em 1.2em;
@@ -646,6 +676,15 @@
                 <button id="clearSessionBtn" class="danger">Clear Session</button>
             </div>
         </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            Made with ♥️ by <a href="#">Corey Bricker</a>
+            <span class="footer-divider">•</span>
+            © 2025
+            <span class="footer-divider">•</span>
+            <span style="font-style: italic;">Keep dialing!</span>
+        </footer>
     </div>
 
     <script>
