@@ -71,73 +71,65 @@
 
         /* Goal Section */
         .goal-section {
-            margin-bottom: 1.2em;
-            padding: 0.8em;
+            margin-bottom: 1.8em;
+            padding: 1em;
             border: 1.5px solid #e5e7eb;
             border-radius: 10px;
             background: #fafbfc;
         }
 
         .goals-container {
-            display: flex;
-            gap: 0.8em;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2em;
         }
 
         .goal-item {
-            flex: 1;
-            background: var(--card);
-            padding: 0.6em;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
         }
 
         .goal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5em;
         }
 
         .goal-title {
             font-weight: 600;
             color: #374151;
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
 
         .goal-input {
-            width: 60px;
-            padding: 0.2em 0.4em;
+            width: 55px;
+            padding: 0.25em 0.4em;
             font-size: 0.85em;
             border-radius: 6px;
             border: 1.5px solid #d1d5db;
-            outline: none;
-            transition: all 0.15s;
             text-align: center;
-            font-weight: 600;
             font-family: inherit;
         }
 
-        .goal-input:focus {
-            border-color: var(--primary);
-            background: #f6faff;
+        .goal-input.money {
+            width: 70px;
         }
 
         .goal-progress {
-            position: relative;
-            height: 20px;
-            background: #f3f4f6;
-            border-radius: 10px;
+            width: 100%;
+            height: 16px;
+            background: #e5e7eb;
+            border-radius: 8px;
             overflow: hidden;
+            position: relative;
         }
 
         .goal-progress-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), #7c5bc5);
-            border-radius: 10px;
+            background: var(--success);
             transition: width 0.3s ease;
+            position: relative;
         }
 
         .goal-progress-text {
@@ -147,25 +139,24 @@
             transform: translate(-50%, -50%);
             font-size: 0.75em;
             font-weight: 600;
-            color: #4b5563;
+            color: #374151;
             z-index: 1;
             white-space: nowrap;
         }
 
-        /* Timer Sections */
         .timer-section {
-            margin-bottom: 1.5em;
-            padding: 1.3em;
+            margin-bottom: 1.8em;
+            padding: 1.5em;
             border: 1.5px solid #e5e7eb;
             border-radius: 10px;
             background: #fafbfc;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
 
         .timer-section.active {
             border-color: var(--primary);
-            background: #f6faff;
-            box-shadow: 0 0 0 3px rgba(97, 63, 180, 0.1);
+            background: #f6f4ff;
+            box-shadow: 0 0 0 3px rgba(97, 63, 180, 0.08);
         }
 
         .timer-section.warning {
@@ -176,85 +167,34 @@
         .timer-section.danger {
             border-color: var(--danger);
             background: #fef2f2;
-            animation: pulse 2s infinite;
+            animation: pulse-danger 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        @keyframes celebrate {
-            0% { transform: scale(1) rotate(0deg); }
-            25% { transform: scale(1.1) rotate(5deg); }
-            50% { transform: scale(1) rotate(-5deg); }
-            75% { transform: scale(1.1) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        .celebrating {
-            animation: celebrate 0.5s ease-in-out;
-        }
-
-        .timer-section.collapsed .timer-content {
-            display: none;
-        }
-
-        .collapse-toggle {
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .collapse-arrow {
-            color: #9ca3af;
-            transition: transform 0.2s;
-            font-size: 1.2em;
-        }
-
-        .timer-section.collapsed .collapse-arrow {
-            transform: rotate(180deg);
+        @keyframes pulse-danger {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         .timer-title {
             font-weight: 600;
             color: #374151;
-            margin-bottom: 0.3em;
-            font-size: 1.05em;
+            margin-bottom: 0.8em;
+            font-size: 1.1em;
             display: flex;
             align-items: center;
-            gap: 0.4em;
+            gap: 0.5em;
         }
 
         .timer-icon {
             font-size: 1.2em;
         }
 
-        .last-call-time {
-            font-size: 0.8em;
-            color: #9ca3af;
-            font-weight: 400;
-            margin-left: auto;
-        }
-
-        .last-call-time.warning {
-            color: var(--warning);
-            font-weight: 500;
-        }
-
-        .session-preview, .break-preview {
-            font-size: 0.9em;
-            color: #6b7280;
-            font-weight: 500;
-            margin-left: auto;
-            font-variant-numeric: tabular-nums;
-        }
-
         .timer-display {
-            font-size: 2.5em;
-            font-weight: 700;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 2.2em;
+            font-weight: 600;
+            color: var(--primary);
             text-align: center;
             margin-bottom: 0.8em;
             padding: 0.5em;
@@ -280,45 +220,6 @@
             display: flex;
             gap: 0.8em;
             justify-content: center;
-        }
-
-        .quick-stats {
-            display: flex;
-            justify-content: center;
-            gap: 1.5em;
-            margin-top: 1em;
-            padding-top: 1em;
-            border-top: 1px solid #e5e7eb;
-            font-size: 0.9em;
-        }
-
-        .quick-stat {
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .quick-stat span {
-            color: #1f2937;
-            font-weight: 600;
-        }
-
-        /* Auto-save indicator */
-        .autosave-indicator {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--success);
-            color: white;
-            padding: 0.5em 1em;
-            border-radius: 20px;
-            font-size: 0.85em;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .autosave-indicator.show {
-            opacity: 1;
         }
 
         button {
@@ -381,21 +282,7 @@
             gap: 0.8em;
         }
 
-        .name-vanid-row {
-            display: flex;
-            gap: 0.8em;
-            align-items: center;
-        }
-
-        .name-vanid-row input[type="text"]:first-child {
-            flex: 1;
-        }
-
-        .name-vanid-row input[type="text"]:last-child {
-            width: 120px;
-        }
-
-        input[type="text"], input[type="number"], textarea, select {
+        input[type="text"], textarea, select {
             width: 100%;
             padding: 0.7em;
             font-size: 1em;
@@ -407,15 +294,10 @@
             background: var(--card);
         }
 
-        input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+        input[type="text"]:focus, textarea:focus, select:focus {
             border-color: var(--primary);
-            background: #f6faff;
-        }
-
-        input:disabled, textarea:disabled, select:disabled {
-            background: #f3f4f6;
-            cursor: not-allowed;
-            opacity: 0.7;
+            background: #f6f4ff;
+            box-shadow: 0 0 0 3px rgba(97, 63, 180, 0.08);
         }
 
         textarea {
@@ -425,422 +307,404 @@
 
         select {
             cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.7rem center;
-            background-size: 1.5em;
-            padding-right: 2.5rem;
         }
 
-        .pledge-row {
+        /* Pledge amount fields */
+        .pledge-fields {
+            display: none;
+            gap: 0.8em;
+            margin-top: 0.8em;
+        }
+
+        .pledge-fields.show {
+            display: flex;
+        }
+
+        .pledge-type {
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pledge-type label {
             display: flex;
             align-items: center;
-            gap: 0.8em;
+            gap: 0.3em;
+            cursor: pointer;
+            font-size: 0.95em;
         }
 
-        .pledge-row label {
-            font-weight: 500;
-            color: var(--success);
-            white-space: nowrap;
+        /* Collapsible Break Timer */
+        .timer-section.collapsed {
+            padding: 1em 1.5em;
         }
 
-        .pledge-amount {
-            flex: 1;
+        .timer-section.collapsed .timer-content {
+            display: none;
+        }
+
+        .collapse-toggle {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .collapse-arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .timer-section.collapsed .collapse-arrow {
+            transform: rotate(180deg);
+        }
+
+        .session-preview {
+            margin-left: 0.5em;
+            font-weight: normal;
+            color: #6b7280;
         }
 
         /* Note Section */
         .note-section {
-            margin-bottom: 1.5em;
-            padding: 1.3em;
+            margin-bottom: 1.8em;
+            padding: 1.5em;
             border: 1.5px solid #e5e7eb;
             border-radius: 10px;
             background: #fafbfc;
-        }
-
-        .note-section.collapsed .note-content {
-            display: none;
-        }
-
-        .note-content {
-            margin-top: 0.8em;
         }
 
         .note-controls {
-            margin-top: 0.8em;
             display: flex;
-            justify-content: flex-end;
+            gap: 0.8em;
+            margin-top: 0.8em;
         }
 
-        /* Call Log */
         .call-log {
             margin-top: 2em;
-            padding: 1.3em;
+            padding: 1.5em;
             border: 1.5px solid #e5e7eb;
             border-radius: 10px;
             background: #fafbfc;
+        }
+
+        .call-log.collapsed {
+            padding: 1em 1.5em;
         }
 
         .call-log.collapsed .log-content {
             display: none;
         }
 
-        .log-header {
+        .call-log-header {
+            cursor: pointer;
+            user-select: none;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
 
-        .log-title {
+        .call-log-title {
             font-weight: 600;
             color: #374151;
             font-size: 1.1em;
-        }
-
-        .log-controls {
             display: flex;
+            align-items: center;
             gap: 0.5em;
-            margin-bottom: 1em;
+            margin: 0;
         }
 
-        .export-btn {
-            padding: 0.5em 1em;
+        .log-count {
+            margin-left: 0.5em;
+            font-weight: normal;
+            color: #6b7280;
             font-size: 0.9em;
-            background: #6b7280;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
         }
 
-        .export-btn:hover {
-            background: #4b5563;
-        }
-
-        .export-btn.danger {
-            background: #dc2626;
-        }
-
-        .export-btn.danger:hover {
-            background: #b91c1c;
-        }
-
-        .log-empty {
-            text-align: center;
-            color: #9ca3af;
-            padding: 2em;
-            font-style: italic;
+        .log-content {
+            margin-top: 1em;
         }
 
         .log-entry {
-            padding: 0.8em;
-            margin-bottom: 0.6em;
             background: var(--card);
+            padding: 1em;
             border-radius: 8px;
+            margin-bottom: 0.8em;
             border: 1px solid #e5e7eb;
-            transition: all 0.15s;
+            transition: all 0.2s;
         }
 
         .log-entry:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-color: #d1d5db;
         }
 
-        .log-entry-header {
+        .log-entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .log-entry.success {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .log-entry.note-entry {
+            border-color: var(--primary);
+            background: #f6f4ff;
+            font-style: italic;
+        }
+
+        .log-meta {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.3em;
+            font-size: 0.95em;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.4em;
         }
 
-        .log-entry-time {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 0.95em;
-        }
-
-        .log-entry-duration {
-            color: #6b7280;
+        .outcome-badge {
             font-size: 0.85em;
-            font-variant-numeric: tabular-nums;
+            padding: 0.2em 0.6em;
+            border-radius: 4px;
+            font-weight: 500;
         }
 
-        .log-entry-details {
+        .outcome-badge.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .outcome-badge.no-answer {
+            background: #6b7280;
+            color: white;
+        }
+
+        .outcome-badge.busy {
+            background: var(--warning);
+            color: white;
+        }
+
+        .outcome-badge.bad-number {
+            background: var(--danger);
+            color: white;
+        }
+
+        .log-details {
+            color: #6b7280;
             font-size: 0.9em;
-            color: #4b5563;
             line-height: 1.4;
         }
 
-        .log-entry-label {
-            font-weight: 500;
-            color: var(--primary);
-            margin-right: 0.5em;
-        }
-
-        .log-entry-vanid {
-            font-size: 0.85em;
-            color: #6b7280;
-            margin-left: 0.5em;
-        }
-
-        .log-entry-outcome {
-            display: inline-block;
-            padding: 0.2em 0.6em;
-            font-size: 0.8em;
-            border-radius: 4px;
-            font-weight: 500;
-            margin-bottom: 0.3em;
-        }
-
-        .outcome-answered { background: #dbeafe; color: #1e40af; }
-        .outcome-answered-busy { background: #fef3c7; color: #92400e; }
-        .outcome-no-answer { background: #f3f4f6; color: #4b5563; }
-        .outcome-bad-number { background: #fee2e2; color: #991b1b; }
-        .outcome-pledge { background: #d1fae5; color: #065f46; }
-        .outcome-refused { background: #fce7f3; color: #831843; }
-        .outcome-wrong-number { background: #ede9fe; color: #5b21b6; }
-        .outcome-moved { background: #e0e7ff; color: #3730a3; }
-        .outcome-deceased { background: #f3f4f6; color: #1f2937; }
-        .outcome-callback { background: #fef3c7; color: #78350f; }
-        .outcome-spanish { background: #ddd6fe; color: #4c1d95; }
-        .outcome-language-barrier { background: #f9a8d4; color: #831843; }
-        .outcome-voicemail { background: #c7d2fe; color: #4338ca; }
-
-        .note-entry {
-            background: #f0f9ff;
-            border-color: #bae6fd;
-        }
-
-        .note-icon {
-            color: #0284c7;
-        }
-
-        /* Summary Section */
-        .summary-section {
+        .summary {
             margin-top: 2em;
-            padding: 1.5em;
-            background: linear-gradient(135deg, #f6faff 0%, #f0f4ff 100%);
-            border-radius: 10px;
-            border: 1.5px solid var(--primary);
+            padding: 1.8em;
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            background: #ecfdf5;
         }
 
         .summary-title {
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 1em;
-            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            margin-bottom: 1.2em;
+            font-size: 1.2em;
             text-align: center;
         }
 
         .summary-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1em;
+            gap: 1.2em;
             margin-bottom: 1.5em;
         }
 
-        .summary-stat {
-            background: var(--card);
-            padding: 1em;
-            border-radius: 8px;
+        .stat {
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 1em;
+            background: var(--card);
+            border-radius: 8px;
+            border: 1px solid #d1fae5;
         }
 
         .stat-value {
-            font-size: 1.8em;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 1.4em;
             font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.2em;
+            color: #065f46;
             font-variant-numeric: tabular-nums;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            color: #6b7280;
+            font-size: 0.85em;
+            color: #047857;
+            margin-top: 0.3em;
+            font-weight: 500;
         }
 
-        /* Footer */
-        .footer {
-            margin-top: 2em;
-            padding-top: 1.5em;
-            border-top: 1px solid #e5e7eb;
+        .export-controls {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+        }
+
+        .empty-state {
             text-align: center;
             color: #9ca3af;
-            font-size: 0.85em;
-        }
-
-        .footer-tagline {
-            margin-top: 0.5em;
-            font-weight: 500;
-            color: var(--primary);
-            font-size: 1.1em;
-        }
-
-        .footer-message {
-            margin-top: 0.3em;
-            font-size: 0.9em;
-            color: #6b7280;
+            padding: 2em;
             font-style: italic;
         }
 
-        .qr-trigger {
-            cursor: pointer;
+        .footer {
+            margin-top: 3em;
+            padding-top: 2em;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.85em;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer:hover {
+            opacity: 1;
+        }
+
+        .footer a {
             color: var(--primary);
             text-decoration: none;
             font-weight: 500;
-            transition: opacity 0.15s;
         }
 
-        .qr-trigger:hover {
-            opacity: 0.8;
+        .footer a:hover {
+            text-decoration: underline;
         }
 
-        /* Keyboard Shortcuts */
-        .shortcuts-help {
-            margin-top: 1em;
-            padding: 0.8em;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 0.8em;
+        .footer-divider {
+            display: inline-block;
+            margin: 0 0.5em;
+            color: #d1d5db;
         }
 
-        .shortcuts-title {
-            font-weight: 600;
-            color: #6b7280;
-            margin-bottom: 0.6em;
-            text-align: center;
-            font-size: 0.9em;
-        }
-
-        .shortcuts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.4em;
-            text-align: center;
-            color: #6b7280;
-        }
-
-        .shortcuts-grid kbd {
-            background: #e5e7eb;
-            padding: 0.15em 0.4em;
-            border-radius: 3px;
-            font-family: monospace;
-            font-size: 0.85em;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        /* QR Modal */
+        /* QR Code Modal */
         .qr-modal {
             display: none;
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .qr-modal-content {
-            background-color: var(--card);
-            margin: 15% auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
             padding: 2em;
-            border-radius: 12px;
-            width: 300px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 320px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0;
+            }
+            
+            .goals-container {
+                grid-template-columns: 1fr;
+                gap: 0.8em;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
         }
 
         .qr-close {
-            color: #9ca3af;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+            position: absolute;
+            top: 1em;
+            right: 1em;
+            font-size: 1.5em;
             cursor: pointer;
-            line-height: 20px;
+            color: #9ca3af;
+            transition: color 0.2s;
         }
 
         .qr-close:hover {
             color: #4b5563;
         }
 
+        .qr-code-container {
+            margin: 1.5em 0;
+            padding: 1em;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
         .qr-title {
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 1em;
-            font-size: 1.2em;
+            color: var(--primary);
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
         }
 
         .qr-subtitle {
             color: #6b7280;
-            margin-top: 1em;
             font-size: 0.9em;
+            margin-top: 1em;
         }
 
-        /* Responsive */
-        @media (max-width: 500px) {
+        @media (max-width: 480px) {
             .container {
-                padding: 1.5em;
-                margin-top: 2vh;
+                padding: 1.5em 1.2em;
+                margin-top: 1vh;
             }
-
+            
             .logo-text {
                 font-size: 1.8rem;
             }
-
+            
             .timer-display {
-                font-size: 2rem;
+                font-size: 1.8em;
             }
-
+            
+            .timer-controls {
+                flex-direction: column;
+            }
+            
             button {
-                padding: 0.6em 1.2em;
-                font-size: 0.95em;
+                width: 100%;
             }
-
+            
             .summary-stats {
                 grid-template-columns: 1fr;
             }
-
+            
+            .export-controls {
+                flex-direction: column;
+            }
+            
             .note-controls {
                 flex-direction: column;
-            }
-
-            .name-vanid-row {
-                flex-direction: column;
-            }
-
-            .name-vanid-row input[type="text"]:last-child {
-                width: 100%;
-            }
-
-            .goals-container {
-                flex-direction: column;
-            }
-
-            .quick-stats {
-                flex-wrap: wrap;
-                gap: 0.8em;
-            }
-
-            .shortcuts-grid {
-                grid-template-columns: 1fr;
-                gap: 0.3em;
-                font-size: 0.8em;
-            }
-
-            .log-controls {
-                flex-direction: column;
-                gap: 0.5em;
-            }
-
-            .export-btn {
-                width: 100%;
             }
         }
     </style>
@@ -856,7 +720,7 @@
             <div class="goals-container">
                 <div class="goal-item">
                     <div class="goal-header">
-                        <div class="goal-title">Calls</div>
+                        <div class="goal-title">Daily Calls</div>
                         <input type="number" id="goalInput" class="goal-input" value="50" min="1" max="999">
                     </div>
                     <div class="goal-progress">
@@ -867,7 +731,7 @@
                 
                 <div class="goal-item">
                     <div class="goal-header">
-                        <div class="goal-title">Money</div>
+                        <div class="goal-title">Financial</div>
                         <input type="number" id="financialGoalInput" class="goal-input money" value="1000" min="0" max="99999" step="50">
                     </div>
                     <div class="goal-progress">
@@ -894,13 +758,6 @@
                     <button id="startSessionBtn">Start Session</button>
                     <button id="stopSessionBtn" class="secondary" disabled>End Session</button>
                 </div>
-                <div class="quick-stats" id="quickStats" style="display: none;">
-                    <span class="quick-stat">📞 <span id="quickCallCount">0</span></span>
-                    <span class="quick-stat">💚 <span id="quickPledgeTotal">$0</span></span>
-                    <span class="quick-stat">🎯 <span id="quickConnectionRate">0%</span></span>
-                    <span class="quick-stat">⚡ <span id="quickCallRate">0/hr</span></span>
-                    <span class="quick-stat">🔥 <span id="quickStreak">0</span></span>
-                </div>
             </div>
         </div>
 
@@ -909,7 +766,6 @@
             <div class="timer-title">
                 <span class="timer-icon">📞</span>
                 Current Call
-                <span class="last-call-time" id="lastCallTime"></span>
             </div>
             <div class="timer-content">
                 <div class="timer-display" id="callDisplay">00:00:00</div>
@@ -918,37 +774,27 @@
                     <button id="endCallBtn" class="secondary" disabled>End Call</button>
                 </div>
                 <div class="call-inputs">
-                    <div class="name-vanid-row">
-                        <input type="text" id="callLabel" placeholder="Contact name (optional)" disabled>
-                        <input type="text" id="vanId" placeholder="VANID" disabled>
-                    </div>
+                    <input type="text" id="callLabel" placeholder="Contact name (optional)" disabled>
                     <select id="callOutcome" disabled>
                         <option value="">Select outcome...</option>
-                        <optgroup label="Successful Contact">
-                            <option value="pledge">💚 Pledge/Success</option>
-                            <option value="answered">Answered - Talked</option>
-                            <option value="answered-busy">Answered - Too Busy</option>
-                            <option value="callback">Callback Requested</option>
-                        </optgroup>
-                        <optgroup label="Unsuccessful Contact">
-                            <option value="no-answer">No Answer</option>
-                            <option value="voicemail">Left Voicemail</option>
-                            <option value="refused">Refused</option>
-                        </optgroup>
-                        <optgroup label="Wrong Contact">
-                            <option value="bad-number">Bad/Disconnected Number</option>
-                            <option value="wrong-number">Wrong Number</option>
-                            <option value="moved">Moved</option>
-                            <option value="deceased">Deceased</option>
-                        </optgroup>
-                        <optgroup label="Language">
-                            <option value="spanish">Spanish Speaker</option>
-                            <option value="language-barrier">Other Language Barrier</option>
-                        </optgroup>
+                        <option value="answered">Answered - Talked</option>
+                        <option value="answered-busy">Answered - Too Busy</option>
+                        <option value="no-answer">No Answer</option>
+                        <option value="bad-number">Bad Number</option>
+                        <option value="pledge">💚 Pledge/Success</option>
                     </select>
-                    <div class="pledge-row" id="pledgeRow" style="display: none;">
-                        <label for="pledgeAmount">Pledge Amount:</label>
-                        <input type="number" id="pledgeAmount" class="pledge-amount" placeholder="0" min="0" step="5" disabled>
+                    <div id="pledgeFields" class="pledge-fields">
+                        <input type="number" id="pledgeAmount" placeholder="Pledge amount ($)" min="0" step="5">
+                        <div class="pledge-type">
+                            <label>
+                                <input type="radio" name="pledgeType" value="hard" checked>
+                                Hard
+                            </label>
+                            <label>
+                                <input type="radio" name="pledgeType" value="soft">
+                                Soft
+                            </label>
+                        </div>
                     </div>
                     <textarea id="callNotes" placeholder="Call notes (optional)" disabled></textarea>
                 </div>
@@ -957,18 +803,13 @@
 
         <!-- Quick Note Section -->
         <div class="note-section" id="noteSection" style="display: none;">
-            <div class="collapse-toggle" onclick="toggleNoteSection()">
-                <div class="timer-title">
-                    <span class="timer-icon">📝</span>
-                    Quick Note
-                </div>
-                <span class="collapse-arrow" id="noteArrow">⌃</span>
+            <div class="timer-title">
+                <span class="timer-icon">📝</span>
+                Quick Note
             </div>
-            <div class="note-content" id="noteContent">
-                <textarea id="quickNote" placeholder="Add a timestamped note..."></textarea>
-                <div class="note-controls">
-                    <button id="addNoteBtn">Add Note</button>
-                </div>
+            <textarea id="quickNote" placeholder="Add a timestamped note..."></textarea>
+            <div class="note-controls">
+                <button id="addNoteBtn">Add Note</button>
             </div>
         </div>
 
@@ -977,12 +818,12 @@
             <div class="collapse-toggle" onclick="toggleBreakTimer()">
                 <div class="timer-title">
                     <span class="timer-icon">☕</span>
-                    Break Timer
-                    <span id="breakPreview" class="break-preview"></span>
+                    Break Time
+                    <span id="breakPreview" style="margin-left: 0.5em; font-weight: normal; color: #6b7280;"></span>
                 </div>
-                <span class="collapse-arrow" id="distractionArrow">⌃</span>
+                <span class="collapse-arrow">⌃</span>
             </div>
-            <div class="timer-content" id="distractionContent">
+            <div class="timer-content">
                 <div class="timer-display" id="distractionDisplay">00:00:00</div>
                 <div class="timer-controls">
                     <button id="startDistractionBtn" disabled>Start Break</button>
@@ -993,66 +834,55 @@
 
         <!-- Call Log -->
         <div class="call-log" id="callLog" style="display: none;">
-            <div class="collapse-toggle" onclick="toggleCallLog()">
-                <div class="log-header">
-                    <div class="log-title">Call History</div>
-                    <span class="collapse-arrow" id="logArrow">⌃</span>
+            <div class="call-log-header" onclick="toggleCallLog()">
+                <div class="call-log-title">
+                    <span class="timer-icon">📋</span>
+                    Activity Log
+                    <span id="logCount" class="log-count"></span>
                 </div>
+                <span class="collapse-arrow" id="logArrow">⌃</span>
             </div>
-            <div class="log-content" id="logContent">
-                <div class="log-controls">
-                    <button id="exportBtn" class="export-btn" onclick="exportToCSV()">Export CSV</button>
-                    <button id="exportStatsBtn" class="export-btn" onclick="exportStats()">Export Stats</button>
-                    <button id="undoLastBtn" class="export-btn danger" onclick="undoLastCall()" style="display: none;">Undo Last Call</button>
-                </div>
-                <div id="logEntries" class="log-entries">
-                    <div class="log-empty">No calls yet. Start your session to begin!</div>
+            <div class="log-content">
+                <div id="logEntries">
+                    <div class="empty-state">No activity recorded yet</div>
                 </div>
             </div>
         </div>
 
-        <!-- Summary Section (shown after session ends) -->
-        <div class="summary-section" id="summarySection" style="display: none;">
-            <div class="summary-title">Session Summary</div>
+        <!-- Session Summary -->
+        <div class="summary" id="sessionSummary" style="display: none;">
+            <div class="summary-title">✅ Session Complete</div>
             <div class="summary-stats">
-                <div class="summary-stat">
-                    <div class="stat-value" id="totalCallsStat">0</div>
-                    <div class="stat-label">Total Calls</div>
+                <div class="stat">
+                    <div class="stat-value" id="totalSessionTime">00:00:00</div>
+                    <div class="stat-label">Total Session</div>
                 </div>
-                <div class="summary-stat">
-                    <div class="stat-value" id="totalTimeStat">0:00</div>
-                    <div class="stat-label">Session Time</div>
+                <div class="stat">
+                    <div class="stat-value" id="totalCallTime">00:00:00</div>
+                    <div class="stat-label">Call Time</div>
                 </div>
-                <div class="summary-stat">
-                    <div class="stat-value" id="totalPledgesStat">$0</div>
-                    <div class="stat-label">Total Pledges</div>
+                <div class="stat">
+                    <div class="stat-value" id="avgCallTime">00:00</div>
+                    <div class="stat-label">Avg Call Length</div>
                 </div>
-                <div class="summary-stat">
-                    <div class="stat-value" id="avgCallTimeStat">0:00</div>
-                    <div class="stat-label">Avg Call Time</div>
+                <div class="stat">
+                    <div class="stat-value" id="connectionRate">0%</div>
+                    <div class="stat-label">Connection Rate</div>
                 </div>
             </div>
-            <button onclick="resetSession()" class="success">New Session</button>
-        </div>
-
-        <!-- Keyboard Shortcuts Help -->
-        <div class="shortcuts-help" id="shortcutsHelp">
-            <div class="shortcuts-title">⌨️ Keyboard Shortcuts</div>
-            <div class="shortcuts-grid">
-                <div><kbd>Space</kbd> Start/End Call</div>
-                <div><kbd>S</kbd> Start Session</div>
-                <div><kbd>B</kbd> Start/End Break</div>
-                <div><kbd>Ctrl+N</kbd> Quick Note</div>
-                <div title="1=Answered, 2=Busy, 3=No Answer, 4=Voicemail, 5=Bad#, 6=Wrong#, 7=Refused, 8=Callback, 9=Pledge"><kbd>1-9</kbd> Quick Outcomes</div>
+            <div class="export-controls">
+                <button id="exportCsvBtn" class="success">Export CSV</button>
+                <button id="clearSessionBtn" class="danger">Clear Session</button>
             </div>
         </div>
-
+        
         <!-- Footer -->
-        <footer class="footer" id="footer">
-            <span>CallTimer by </span>
-            <span class="qr-trigger" onclick="showQRCode()">Corey Bricker</span>
-            <div class="footer-tagline">Keep on dialing!</div>
-            <div class="footer-message" id="footerMessage"></div>
+        <footer class="footer">
+            <a href="#" onclick="showQRCode(event)">Corey Bricker</a>
+            <span class="footer-divider">•</span>
+            © 2025
+            <span class="footer-divider">•</span>
+            <span style="font-style: italic;">Keep dialing!</span>
         </footer>
     </div>
 
@@ -1063,7 +893,8 @@
             <div class="qr-title">Contact Info</div>
             <div class="qr-code-container">
                 <!-- QR Code SVG - This is a placeholder, replace with your actual QR code -->
-                <svg width="5.61cm" height="5.61cm" viewBox="0 0 53 53" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg width="5.61cm" height="5.61cm" viewBox="0 0 53 53" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<g id="QRcode">
 		<rect x="0" y="0" width="53" height="53" fill="#ffffff"/>
 		<g id="Pattern" transform="translate(4,4)">
@@ -2132,15 +1963,10 @@
 		</g>
 	</g>
 </svg>
-                </svg>
+
             </div>
             <div class="qr-subtitle">Scan to save contact info</div>
         </div>
-    </div>
-
-    <!-- Auto-save indicator -->
-    <div class="autosave-indicator" id="autosaveIndicator">
-        Saved ✓
     </div>
 
     <script>
@@ -2157,34 +1983,6 @@
         let dailyGoal = 50;
         let financialGoal = 1000;
         let autosaveInterval = null;
-        let currentStreak = 0;
-        let bestStreak = 0;
-        let warningPlayed5Min = false;
-        let warningPlayed10Min = false;
-        let lastCallEndTime = null;
-
-        // Simple beep function
-        function playBeep(frequency = 440, duration = 200) {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = frequency;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration / 1000);
-            } catch (e) {
-                // Silently fail if audio is not supported
-            }
-        }
 
         // Get DOM elements
         const elements = {
@@ -2194,71 +1992,65 @@
             financialGoalInput: document.getElementById('financialGoalInput'),
             financialProgressBar: document.getElementById('financialProgressBar'),
             financialProgressText: document.getElementById('financialProgressText'),
+            
             sessionSection: document.getElementById('sessionSection'),
-            sessionDisplay: document.getElementById('sessionDisplay'),
+            sessionContent: document.getElementById('sessionContent'),
+            sessionArrow: document.getElementById('sessionArrow'),
             sessionPreview: document.getElementById('sessionPreview'),
+            sessionDisplay: document.getElementById('sessionDisplay'),
             startSessionBtn: document.getElementById('startSessionBtn'),
             stopSessionBtn: document.getElementById('stopSessionBtn'),
+            
             callSection: document.getElementById('callSection'),
             callDisplay: document.getElementById('callDisplay'),
             startCallBtn: document.getElementById('startCallBtn'),
             endCallBtn: document.getElementById('endCallBtn'),
             callLabel: document.getElementById('callLabel'),
-            vanId: document.getElementById('vanId'),
             callOutcome: document.getElementById('callOutcome'),
-            pledgeRow: document.getElementById('pledgeRow'),
+            pledgeFields: document.getElementById('pledgeFields'),
             pledgeAmount: document.getElementById('pledgeAmount'),
             callNotes: document.getElementById('callNotes'),
+            
             noteSection: document.getElementById('noteSection'),
             quickNote: document.getElementById('quickNote'),
             addNoteBtn: document.getElementById('addNoteBtn'),
+            
             distractionSection: document.getElementById('distractionSection'),
             distractionDisplay: document.getElementById('distractionDisplay'),
-            breakPreview: document.getElementById('breakPreview'),
             startDistractionBtn: document.getElementById('startDistractionBtn'),
             endDistractionBtn: document.getElementById('endDistractionBtn'),
+            breakPreview: document.getElementById('breakPreview'),
+            
             callLog: document.getElementById('callLog'),
             logEntries: document.getElementById('logEntries'),
-            summarySection: document.getElementById('summarySection'),
-            totalCallsStat: document.getElementById('totalCallsStat'),
-            totalTimeStat: document.getElementById('totalTimeStat'),
-            totalPledgesStat: document.getElementById('totalPledgesStat'),
-            avgCallTimeStat: document.getElementById('avgCallTimeStat'),
-            goalSection: document.getElementById('goalSection'),
-            footer: document.getElementById('footer'),
-            quickStats: document.getElementById('quickStats'),
-            quickCallCount: document.getElementById('quickCallCount'),
-            quickPledgeTotal: document.getElementById('quickPledgeTotal'),
-            quickConnectionRate: document.getElementById('quickConnectionRate'),
-            quickCallRate: document.getElementById('quickCallRate'),
-            quickStreak: document.getElementById('quickStreak'),
-            lastCallTime: document.getElementById('lastCallTime')
+            logCount: document.getElementById('logCount'),
+            
+            sessionSummary: document.getElementById('sessionSummary'),
+            totalSessionTime: document.getElementById('totalSessionTime'),
+            totalCallTime: document.getElementById('totalCallTime'),
+            avgCallTime: document.getElementById('avgCallTime'),
+            connectionRate: document.getElementById('connectionRate'),
+            
+            exportCsvBtn: document.getElementById('exportCsvBtn'),
+            clearSessionBtn: document.getElementById('clearSessionBtn')
         };
 
-        // Event listeners
-        elements.startSessionBtn.addEventListener('click', startSession);
-        elements.stopSessionBtn.addEventListener('click', endSession);
-        elements.startCallBtn.addEventListener('click', startCall);
-        elements.endCallBtn.addEventListener('click', endCall);
-        elements.startDistractionBtn.addEventListener('click', startDistraction);
-        elements.endDistractionBtn.addEventListener('click', endDistraction);
-        elements.addNoteBtn.addEventListener('click', addNote);
-        elements.goalInput.addEventListener('change', updateGoal);
-        elements.financialGoalInput.addEventListener('change', updateFinancialGoal);
-        elements.callOutcome.addEventListener('change', handleOutcomeChange);
-
-        // Format time function
+        // Utility function to format time
         function formatTime(ms) {
-            const seconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            return `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function formatShortTime(ms) {
-            const minutes = Math.floor(ms / 60000);
-            const seconds = Math.floor((ms % 60000) / 1000);
-            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        function formatTimeShort(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
         // Toggle functions
@@ -2270,76 +2062,90 @@
             elements.distractionSection.classList.toggle('collapsed');
         }
 
-        function toggleNoteSection() {
-            elements.noteSection.classList.toggle('collapsed');
-        }
-
         function toggleCallLog() {
             elements.callLog.classList.toggle('collapsed');
+        }
+
+        // Update goal progress
+        function updateGoalProgress() {
+            const calls = entries.filter(e => e.type === 'call');
+            const callProgress = Math.min((calls.length / dailyGoal) * 100, 100);
+            
+            elements.goalProgressBar.style.width = `${callProgress}%`;
+            elements.goalProgressText.textContent = `${calls.length} / ${dailyGoal}`;
+            
+            if (callProgress >= 100) {
+                elements.goalProgressBar.style.background = '#10b981';
+            }
+            
+            // Calculate financial progress
+            const totalPledged = calls
+                .filter(c => c.outcome === 'pledge' && c.pledgeAmount)
+                .reduce((sum, call) => sum + call.pledgeAmount, 0);
+            
+            const financialProgress = Math.min((totalPledged / financialGoal) * 100, 100);
+            
+            elements.financialProgressBar.style.width = `${financialProgress}%`;
+            elements.financialProgressText.textContent = `${totalPledged} / ${financialGoal.toLocaleString()}`;
+            
+            if (financialProgress >= 100) {
+                elements.financialProgressBar.style.background = '#10b981';
+            }
         }
 
         // Session functions
         function startSession() {
             sessionStartTime = Date.now();
-            sessionEndTime = null;
             isSessionActive = true;
-            entries = [];
-            distractionElapsed = 0;
-            currentStreak = 0;
-            bestStreak = 0;
-            lastCallEndTime = null;
             
             elements.startSessionBtn.disabled = true;
             elements.stopSessionBtn.disabled = false;
             elements.startCallBtn.disabled = false;
             elements.startDistractionBtn.disabled = false;
             elements.callLabel.disabled = false;
-            elements.vanId.disabled = false;
             elements.callOutcome.disabled = false;
             elements.callNotes.disabled = false;
-            elements.pledgeAmount.disabled = false;
             
             elements.sessionSection.classList.add('active');
-            elements.sessionSection.classList.add('collapsed'); // Auto-collapse on start
             elements.callLog.style.display = 'block';
             elements.noteSection.style.display = 'block';
-            elements.summarySection.style.display = 'none';
             
-            updateCallLog();
-            updateQuickStats();
+            // Start autosave
             startAutosave();
+            
             saveToStorage();
         }
 
-        function endSession() {
+        function stopSession() {
+            if (!confirm('Are you sure you want to end this session? This will finalize all timers and show your summary.')) {
+                return;
+            }
+            
             sessionEndTime = Date.now();
             isSessionActive = false;
             
-            // End any active call
-            if (isCallActive) {
-                endCall();
-            }
-            
-            // End any active distraction
-            if (isDistractionActive) {
-                endDistraction();
-            }
-            
-            stopAutosave();
+            // Stop any active timers
+            if (isCallActive) endCall();
+            if (isDistractionActive) endDistraction();
             
             elements.startSessionBtn.disabled = false;
             elements.stopSessionBtn.disabled = true;
             elements.startCallBtn.disabled = true;
+            elements.endCallBtn.disabled = true;
             elements.startDistractionBtn.disabled = true;
+            elements.endDistractionBtn.disabled = true;
             elements.callLabel.disabled = true;
-            elements.vanId.disabled = true;
             elements.callOutcome.disabled = true;
-            elements.pledgeAmount.disabled = true;
             elements.callNotes.disabled = true;
             
             elements.sessionSection.classList.remove('active');
             elements.callSection.classList.remove('active');
+            elements.callSection.classList.remove('warning');
+            elements.callSection.classList.remove('danger');
             elements.distractionSection.classList.remove('active');
+            
+            // Stop autosave
+            stopAutosave();
             
             showSummary();
             saveToStorage();
@@ -2349,16 +2155,10 @@
         function startCall() {
             callStartTime = Date.now();
             isCallActive = true;
-            warningPlayed5Min = false;
-            warningPlayed10Min = false;
             
             elements.startCallBtn.disabled = true;
             elements.endCallBtn.disabled = false;
             elements.callSection.classList.add('active');
-            elements.lastCallTime.textContent = '';
-            
-            // Auto-focus on name field
-            elements.callLabel.focus();
             
             saveToStorage();
         }
@@ -2369,79 +2169,40 @@
             const callEndTime = Date.now();
             const callDuration = callEndTime - callStartTime;
             
-            const call = {
+            const entry = {
                 type: 'call',
                 startTime: new Date(callStartTime),
                 endTime: new Date(callEndTime),
                 duration: callDuration,
                 label: elements.callLabel.value.trim(),
-                vanId: elements.vanId.value.trim(),
                 outcome: elements.callOutcome.value,
-                pledgeAmount: elements.callOutcome.value === 'pledge' ? parseFloat(elements.pledgeAmount.value) || 0 : 0,
                 notes: elements.callNotes.value.trim()
             };
             
-            entries.push(call);
-            lastCallEndTime = Date.now();
-            
-            // Play success sound for pledges
-            if (call.outcome === 'pledge') {
-                // Play a happy ascending tone
-                setTimeout(() => playBeep(523, 150), 0);    // C
-                setTimeout(() => playBeep(659, 150), 150);  // E
-                setTimeout(() => playBeep(784, 200), 300);  // G
-                
-                // Add celebration animation to financial goal
-                elements.financialProgressBar.parentElement.parentElement.classList.add('celebrating');
-                setTimeout(() => {
-                    elements.financialProgressBar.parentElement.parentElement.classList.remove('celebrating');
-                }, 500);
+            // Add pledge information if applicable
+            if (elements.callOutcome.value === 'pledge' && elements.pledgeAmount.value) {
+                entry.pledgeAmount = parseFloat(elements.pledgeAmount.value);
+                entry.pledgeType = document.querySelector('input[name="pledgeType"]:checked').value;
             }
             
-            // Update streak
-            const successfulOutcomes = ['answered', 'answered-busy', 'pledge', 'callback'];
-            if (successfulOutcomes.includes(call.outcome)) {
-                currentStreak++;
-                if (currentStreak > bestStreak) {
-                    bestStreak = currentStreak;
-                }
-            } else if (call.outcome && call.outcome !== 'voicemail') {
-                // Reset streak on non-successful outcomes (but not voicemail)
-                currentStreak = 0;
-            }
-            
+            entries.push(entry);
             isCallActive = false;
             
             elements.startCallBtn.disabled = false;
             elements.endCallBtn.disabled = true;
             elements.callSection.classList.remove('active', 'warning', 'danger');
-            elements.callDisplay.classList.remove('warning');
             
             // Clear inputs
             elements.callLabel.value = '';
-            elements.vanId.value = '';
             elements.callOutcome.value = '';
-            elements.pledgeAmount.value = '';
             elements.callNotes.value = '';
-            elements.pledgeRow.style.display = 'none';
-            
-            // Auto-focus on name field for next call
-            elements.callLabel.focus();
+            elements.pledgeAmount.value = '';
+            elements.pledgeFields.classList.remove('show');
+            document.querySelector('input[name="pledgeType"][value="hard"]').checked = true;
             
             updateCallLog();
             updateGoalProgress();
-            updateQuickStats();
             saveToStorage();
-        }
-
-        // Outcome change handler
-        function handleOutcomeChange() {
-            if (elements.callOutcome.value === 'pledge') {
-                elements.pledgeRow.style.display = 'flex';
-            } else {
-                elements.pledgeRow.style.display = 'none';
-                elements.pledgeAmount.value = '';
-            }
         }
 
         // Note functions
@@ -2449,13 +2210,13 @@
             const noteText = elements.quickNote.value.trim();
             if (!noteText) return;
             
-            const note = {
+            const entry = {
                 type: 'note',
                 timestamp: new Date(),
                 text: noteText
             };
             
-            entries.push(note);
+            entries.push(entry);
             elements.quickNote.value = '';
             
             updateCallLog();
@@ -2510,48 +2271,18 @@
                 const callTime = now - callStartTime;
                 elements.callDisplay.textContent = formatTime(callTime);
                 
-                // Enhanced visual warnings and sounds
+                // Enhanced visual warnings
                 if (callTime >= 10 * 60 * 1000) { // 10 minutes
                     elements.callSection.classList.remove('warning');
                     elements.callSection.classList.add('danger');
-                    if (!warningPlayed10Min) {
-                        playBeep(880, 300); // Higher pitch, longer beep
-                        warningPlayed10Min = true;
-                    }
                 } else if (callTime >= 5 * 60 * 1000) { // 5 minutes
                     elements.callSection.classList.add('warning');
                     elements.callSection.classList.remove('danger');
-                    if (!warningPlayed5Min) {
-                        playBeep(660, 200); // Medium pitch beep
-                        warningPlayed5Min = true;
-                    }
                 } else {
                     elements.callSection.classList.remove('warning', 'danger');
                 }
             } else {
                 elements.callDisplay.textContent = '00:00:00';
-            }
-            
-            // Update time since last call
-            if (!isCallActive && lastCallEndTime && isSessionActive) {
-                const timeSinceLastCall = now - lastCallEndTime;
-                const minutes = Math.floor(timeSinceLastCall / 60000);
-                const seconds = Math.floor((timeSinceLastCall % 60000) / 1000);
-                
-                if (minutes > 0) {
-                    elements.lastCallTime.textContent = `${minutes}m ${seconds}s since last call`;
-                } else {
-                    elements.lastCallTime.textContent = `${seconds}s since last call`;
-                }
-                
-                // Warn if it's been too long
-                if (minutes >= 5) {
-                    elements.lastCallTime.classList.add('warning');
-                } else {
-                    elements.lastCallTime.classList.remove('warning');
-                }
-            } else {
-                elements.lastCallTime.textContent = '';
             }
             
             // Update distraction timer
@@ -2575,355 +2306,248 @@
             elements.logEntries.innerHTML = '';
             
             if (entries.length === 0) {
-                elements.logEntries.innerHTML = '<div class="log-empty">No calls yet. Start your session to begin!</div>';
-                document.getElementById('undoLastBtn').style.display = 'none';
+                elements.logEntries.innerHTML = '<div class="empty-state">No activity recorded yet</div>';
+                elements.logCount.textContent = '';
                 return;
             }
             
-            // Show undo button only if last entry is a call (not a note)
-            const lastEntry = entries[entries.length - 1];
-            if (lastEntry.type === 'call' && isSessionActive) {
-                document.getElementById('undoLastBtn').style.display = 'block';
-            } else {
-                document.getElementById('undoLastBtn').style.display = 'none';
+            // Update log count
+            const callCount = entries.filter(e => e.type === 'call').length;
+            const noteCount = entries.filter(e => e.type === 'note').length;
+            let countText = '';
+            
+            if (callCount > 0 && noteCount > 0) {
+                countText = `(${callCount} calls, ${noteCount} notes)`;
+            } else if (callCount > 0) {
+                countText = `(${callCount} call${callCount !== 1 ? 's' : ''})`;
+            } else if (noteCount > 0) {
+                countText = `(${noteCount} note${noteCount !== 1 ? 's' : ''})`;
             }
             
-            // Display entries in reverse chronological order
-            [...entries].reverse().forEach((entry, index) => {
+            elements.logCount.textContent = countText;
+            
+            entries.forEach((entry, index) => {
                 const logEntry = document.createElement('div');
                 
                 if (entry.type === 'call') {
                     logEntry.className = 'log-entry';
-                    logEntry.innerHTML = `
-                        <div class="log-entry-header">
-                            <div>
-                                <span class="log-entry-time">${entry.startTime.toLocaleTimeString()}</span>
-                                ${entry.vanId ? `<span class="log-entry-vanid">VANID: ${entry.vanId}</span>` : ''}
-                            </div>
-                            <span class="log-entry-duration">${formatShortTime(entry.duration)}</span>
-                        </div>
-                        <div class="log-entry-details">
-                            ${entry.label ? `<span class="log-entry-label">${entry.label}</span>` : ''}
-                            ${entry.outcome ? `<span class="log-entry-outcome outcome-${entry.outcome}">${getOutcomeLabel(entry.outcome)}</span>` : ''}
-                            ${entry.pledgeAmount > 0 ? `<div style="color: var(--success); font-weight: 600; margin-top: 0.3em;">💚 $${entry.pledgeAmount}</div>` : ''}
-                            ${entry.notes ? `<div style="margin-top: 0.5em;">${entry.notes}</div>` : ''}
-                        </div>
-                    `;
+                    if (entry.outcome === 'pledge') {
+                        logEntry.classList.add('success');
+                    }
+                    
+                    const meta = document.createElement('div');
+                    meta.className = 'log-meta';
+                    
+                    const callInfo = document.createElement('span');
+                    callInfo.textContent = `Call ${entries.filter((e, i) => e.type === 'call' && i <= index).length}: ${formatTime(entry.duration)} - ${entry.startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                    
+                    const badge = document.createElement('span');
+                    if (entry.outcome) {
+                        badge.className = 'outcome-badge';
+                        switch(entry.outcome) {
+                            case 'answered':
+                                badge.textContent = 'Answered';
+                                badge.classList.add('success');
+                                break;
+                            case 'answered-busy':
+                                badge.textContent = 'Busy';
+                                badge.classList.add('busy');
+                                break;
+                            case 'no-answer':
+                                badge.textContent = 'No Answer';
+                                badge.classList.add('no-answer');
+                                break;
+                            case 'bad-number':
+                                badge.textContent = 'Bad #';
+                                badge.classList.add('bad-number');
+                                break;
+                            case 'pledge':
+                                badge.textContent = '💚 Pledge';
+                                badge.classList.add('success');
+                                break;
+                        }
+                    }
+                    
+                    meta.appendChild(callInfo);
+                    if (badge.textContent) meta.appendChild(badge);
+                    
+                    const details = document.createElement('div');
+                    details.className = 'log-details';
+                    const label = entry.label ? `"${entry.label}"` : 'No name';
+                    const notes = entry.notes ? ` - ${entry.notes}` : '';
+                    let pledgeInfo = '';
+                    if (entry.pledgeAmount) {
+                        pledgeInfo = ` - ${entry.pledgeAmount} (${entry.pledgeType})`;
+                    }
+                    details.textContent = `${label}${pledgeInfo}${notes}`;
+                    
+                    logEntry.appendChild(meta);
+                    logEntry.appendChild(details);
                 } else if (entry.type === 'note') {
                     logEntry.className = 'log-entry note-entry';
-                    logEntry.innerHTML = `
-                        <div class="log-entry-header">
-                            <div>
-                                <span class="note-icon">📝</span>
-                                <span class="log-entry-time">${entry.timestamp.toLocaleTimeString()}</span>
-                            </div>
-                        </div>
-                        <div class="log-entry-details">${entry.text}</div>
-                    `;
+                    
+                    const meta = document.createElement('div');
+                    meta.className = 'log-meta';
+                    meta.textContent = `Note - ${entry.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                    
+                    const details = document.createElement('div');
+                    details.className = 'log-details';
+                    details.textContent = entry.text;
+                    
+                    logEntry.appendChild(meta);
+                    logEntry.appendChild(details);
                 }
                 
                 elements.logEntries.appendChild(logEntry);
             });
         }
 
-        // Get outcome label
-        function getOutcomeLabel(outcome) {
-            const labels = {
-                'answered': 'Answered - Talked',
-                'answered-busy': 'Answered - Too Busy',
-                'no-answer': 'No Answer',
-                'voicemail': 'Left Voicemail',
-                'bad-number': 'Bad Number',
-                'wrong-number': 'Wrong Number',
-                'pledge': '💚 Pledge',
-                'refused': 'Refused',
-                'moved': 'Moved',
-                'deceased': 'Deceased',
-                'callback': 'Callback',
-                'spanish': 'Spanish',
-                'language-barrier': 'Language Barrier'
-            };
-            return labels[outcome] || outcome;
-        }
-
-        // Update goal progress
-        function updateGoal() {
-            dailyGoal = parseInt(elements.goalInput.value) || 50;
-            updateGoalProgress();
-            saveToStorage();
-        }
-
-        function updateFinancialGoal() {
-            financialGoal = parseInt(elements.financialGoalInput.value) || 1000;
-            updateGoalProgress();
-            saveToStorage();
-        }
-
-        function updateGoalProgress() {
-            const callCount = entries.filter(e => e.type === 'call').length;
-            const pledgeTotal = entries.filter(e => e.type === 'call' && e.pledgeAmount > 0)
-                .reduce((sum, call) => sum + call.pledgeAmount, 0);
-            
-            // Update daily calls progress
-            const callProgress = Math.min((callCount / dailyGoal) * 100, 100);
-            elements.goalProgressBar.style.width = `${callProgress}%`;
-            elements.goalProgressText.textContent = `${callCount} / ${dailyGoal}`;
-            
-            // Update financial progress
-            const financialProgress = Math.min((pledgeTotal / financialGoal) * 100, 100);
-            elements.financialProgressBar.style.width = `${financialProgress}%`;
-            
-            // Format financial text
-            const formatMoney = (amount) => {
-                if (amount >= 1000) {
-                    return `$${(amount / 1000).toFixed(1)}k`;
-                }
-                return `$${amount}`;
-            };
-            
-            elements.financialProgressText.textContent = `${formatMoney(pledgeTotal)} / ${formatMoney(financialGoal)}`;
-        }
-
-        // Update quick stats
-        function updateQuickStats() {
-            const calls = entries.filter(e => e.type === 'call');
-            const totalCalls = calls.length;
-            
-            if (totalCalls > 0) {
-                elements.quickStats.style.display = 'flex';
-                
-                const totalPledges = calls.reduce((sum, call) => sum + (call.pledgeAmount || 0), 0);
-                const connectedCalls = calls.filter(call => 
-                    call.outcome === 'answered' || 
-                    call.outcome === 'answered-busy' || 
-                    call.outcome === 'pledge' ||
-                    call.outcome === 'callback' ||
-                    call.outcome === 'refused'
-                ).length;
-                const connectionRate = ((connectedCalls / totalCalls) * 100).toFixed(0);
-                
-                // Calculate call rate
-                const sessionDuration = (Date.now() - sessionStartTime) / (1000 * 60 * 60); // in hours
-                const callRate = sessionDuration > 0 ? Math.round(totalCalls / sessionDuration) : 0;
-                
-                elements.quickCallCount.textContent = totalCalls;
-                elements.quickPledgeTotal.textContent = `${totalPledges}`;
-                elements.quickConnectionRate.textContent = `${connectionRate}%`;
-                elements.quickCallRate.textContent = `${callRate}/hr`;
-            }
-        }
-
         // Show summary
         function showSummary() {
+            const totalSessionTime = sessionEndTime - sessionStartTime;
             const calls = entries.filter(e => e.type === 'call');
-            const totalCalls = calls.length;
-            const sessionDuration = sessionEndTime - sessionStartTime;
-            const totalPledges = calls.reduce((sum, call) => sum + (call.pledgeAmount || 0), 0);
-            const avgCallTime = totalCalls > 0 ? 
-                calls.reduce((sum, call) => sum + call.duration, 0) / totalCalls : 0;
+            const totalCallTime = calls.reduce((sum, call) => sum + call.duration, 0);
             
-            elements.totalCallsStat.textContent = totalCalls;
-            elements.totalTimeStat.textContent = formatShortTime(sessionDuration);
-            elements.totalPledgesStat.textContent = `$${totalPledges}`;
-            elements.avgCallTimeStat.textContent = formatShortTime(avgCallTime);
+            // Calculate average call time
+            const avgCallTimeMs = calls.length > 0 ? totalCallTime / calls.length : 0;
             
-            elements.goalSection.style.display = 'none';
-            elements.sessionSection.style.display = 'none';
-            elements.callSection.style.display = 'none';
-            elements.noteSection.style.display = 'none';
-            elements.distractionSection.style.display = 'none';
-            // Keep call log visible but collapsed
-            elements.callLog.classList.add('collapsed');
-            elements.footer.style.display = 'none';
-            elements.summarySection.style.display = 'block';
-            document.getElementById('undoLastBtn').style.display = 'none';
+            // Calculate connection rate
+            const answeredCalls = calls.filter(c => c.outcome === 'answered' || c.outcome === 'answered-busy' || c.outcome === 'pledge').length;
+            const connectionRatePercent = calls.length > 0 ? Math.round((answeredCalls / calls.length) * 100) : 0;
+            
+            elements.totalSessionTime.textContent = formatTime(totalSessionTime);
+            elements.totalCallTime.textContent = formatTime(totalCallTime);
+            elements.avgCallTime.textContent = formatTimeShort(avgCallTimeMs);
+            elements.connectionRate.textContent = `${connectionRatePercent}%`;
+            
+            elements.sessionSummary.style.display = 'block';
         }
 
-        // Reset session
-        function resetSession() {
-            // Clear all data
-            sessionStartTime = null;
-            sessionEndTime = null;
-            callStartTime = null;
-            distractionStartTime = null;
-            distractionElapsed = 0;
-            entries = [];
-            isSessionActive = false;
-            isCallActive = false;
-            isDistractionActive = false;
-            currentStreak = 0;
-            bestStreak = 0;
-            lastCallEndTime = null;
-            
-            // Reset displays
-            elements.sessionDisplay.textContent = '00:00:00';
-            elements.sessionPreview.textContent = '';
-            elements.callDisplay.textContent = '00:00:00';
-            elements.distractionDisplay.textContent = '00:00:00';
-            elements.breakPreview.textContent = '';
-            
-            // Reset buttons
-            elements.startSessionBtn.disabled = false;
-            elements.stopSessionBtn.disabled = true;
-            elements.startCallBtn.disabled = true;
-            elements.endCallBtn.disabled = true;
-            elements.startDistractionBtn.disabled = true;
-            elements.endDistractionBtn.disabled = true;
-            
-            // Clear inputs
-            elements.callLabel.value = '';
-            elements.vanId.value = '';
-            elements.callOutcome.value = '';
-            elements.pledgeAmount.value = '';
-            elements.callNotes.value = '';
-            elements.quickNote.value = '';
-            
-            // Reset sections
-            elements.goalSection.style.display = 'block';
-            elements.sessionSection.style.display = 'block';
-            elements.sessionSection.classList.remove('collapsed');
-            elements.callSection.style.display = 'block';
-            elements.noteSection.style.display = 'none';
-            elements.distractionSection.style.display = 'block';
-            elements.callLog.style.display = 'none';
-            elements.callLog.classList.remove('collapsed');
-            elements.summarySection.style.display = 'none';
-            elements.footer.style.display = 'block';
-            elements.quickStats.style.display = 'none';
-            document.getElementById('footerMessage').textContent = `Ready to make a difference? Let's go!`;
-            
-            // Update goal progress
-            updateGoalProgress();
-            
-            // Clear storage
-            localStorage.removeItem('callTimerData');
-        }
-
-        // QR Code functions
-        function showQRCode() {
-            document.getElementById('qrModal').style.display = 'block';
-        }
-
-        function hideQRCode(event) {
-            document.getElementById('qrModal').style.display = 'none';
-        }
-
-        // Export to CSV function
-        function exportToCSV() {
-            if (entries.length === 0) {
-                alert('No data to export');
+        // Export CSV
+        function exportCsv() {
+            const calls = entries.filter(e => e.type === 'call');
+            if (calls.length === 0 && entries.filter(e => e.type === 'note').length === 0) {
+                alert('No data to export!');
                 return;
             }
             
-            // Create CSV header
-            let csv = 'Type,Date,Time,Duration,Name,VANID,Outcome,Pledge Amount,Notes/Text\n';
+            const headers = ['Type', 'Date', 'Time', 'Duration (minutes)', 'Name/Text', 'Outcome', 'Pledge', 'Notes'];
+            const sessionDate = new Date(sessionStartTime).toLocaleDateString();
             
-            // Add each entry as a row
-            entries.forEach(entry => {
+            const rows = entries.map((entry) => {
                 if (entry.type === 'call') {
-                    const date = entry.startTime.toLocaleDateString();
-                    const time = entry.startTime.toLocaleTimeString();
-                    const duration = formatShortTime(entry.duration);
-                    const name = entry.label || '';
-                    const vanId = entry.vanId || '';
-                    const outcome = entry.outcome || '';
-                    const pledgeAmount = entry.pledgeAmount || '0';
-                    const notes = entry.notes || '';
-                    
-                    csv += `Call,${date},${time},${duration},${escapeField(name)},${escapeField(vanId)},${outcome},${pledgeAmount},${escapeField(notes)}\n`;
-                } else if (entry.type === 'note') {
-                    const date = entry.timestamp.toLocaleDateString();
-                    const time = entry.timestamp.toLocaleTimeString();
-                    
-                    csv += `Note,${date},${time},,,,,,${escapeField(entry.text)}\n`;
+                    return [
+                        'Call',
+                        sessionDate,
+                        entry.startTime.toLocaleTimeString(),
+                        Math.round(entry.duration / 60000 * 100) / 100,
+                        entry.label || '',
+                        entry.outcome || '',
+                        entry.pledgeAmount ? `${entry.pledgeAmount} (${entry.pledgeType})` : '',
+                        entry.notes || ''
+                    ];
+                } else {
+                    return [
+                        'Note',
+                        sessionDate,
+                        entry.timestamp.toLocaleTimeString(),
+                        '',
+                        entry.text,
+                        '',
+                        '',
+                        ''
+                    ];
                 }
             });
             
-            // Create blob and download
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
+            // Add summary
+            const totalSessionTime = sessionEndTime - sessionStartTime;
+            const totalCallTime = calls.reduce((sum, call) => sum + call.duration, 0);
+            const avgCallTimeMs = calls.length > 0 ? totalCallTime / calls.length : 0;
+            const answeredCalls = calls.filter(c => c.outcome === 'answered' || c.outcome === 'answered-busy' || c.outcome === 'pledge').length;
+            const connectionRatePercent = calls.length > 0 ? Math.round((answeredCalls / calls.length) * 100) : 0;
+            const totalPledged = calls
+                .filter(c => c.outcome === 'pledge' && c.pledgeAmount)
+                .reduce((sum, call) => sum + call.pledgeAmount, 0);
+            
+            rows.push([]);
+            rows.push(['SUMMARY', '', '', '', '', '', '', '']);
+            rows.push(['Total Session Time', '', '', Math.round(totalSessionTime / 60000 * 100) / 100, '', '', '', '']);
+            rows.push(['Total Call Time', '', '', Math.round(totalCallTime / 60000 * 100) / 100, '', '', '', '']);
+            rows.push(['Average Call Time', '', '', Math.round(avgCallTimeMs / 60000 * 100) / 100, '', '', '', '']);
+            rows.push(['Total Calls', '', '', '', calls.length, '', '', '']);
+            rows.push(['Connection Rate', '', '', '', `${connectionRatePercent}%`, '', '', '']);
+            rows.push(['Total Pledged', '', '', '', '', '', `${totalPledged}`, '']);
+            rows.push(['Total Break Time', '', '', Math.round(distractionElapsed / 60000 * 100) / 100, '', '', '', '']);
+            
+            const csvContent = [headers, ...rows]
+                .map(row => row.map(field => `"${field}"`).join(','))
+                .join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `call-log-${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(a);
+            a.download = `call-session-${sessionDate.replace(/\//g, '-')}.csv`;
             a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url);
         }
 
-        // Escape CSV field helper
-        function escapeField(field) {
-            if (field.toString().includes(',') || field.toString().includes('"') || field.toString().includes('\n')) {
-                return `"${field.toString().replace(/"/g, '""')}"`;
+        // Clear session
+        function clearSession() {
+            const totalCalls = entries.filter(e => e.type === 'call').length;
+            const totalNotes = entries.filter(e => e.type === 'note').length;
+            
+            if (confirm(`Are you sure you want to clear this session?\n\nThis will delete:\n- ${totalCalls} calls\n- ${totalNotes} notes\n- All timers and progress\n\nThis cannot be undone.`)) {
+                sessionStartTime = null;
+                sessionEndTime = null;
+                callStartTime = null;
+                distractionStartTime = null;
+                distractionElapsed = 0;
+                entries = [];
+                isSessionActive = false;
+                isCallActive = false;
+                isDistractionActive = false;
+                
+                elements.sessionDisplay.textContent = '00:00:00';
+                elements.callDisplay.textContent = '00:00:00';
+                elements.distractionDisplay.textContent = '00:00:00';
+                elements.breakPreview.textContent = '';
+                elements.callLabel.value = '';
+                elements.callOutcome.value = '';
+                elements.callNotes.value = '';
+                elements.quickNote.value = '';
+                
+                elements.startSessionBtn.disabled = false;
+                elements.stopSessionBtn.disabled = true;
+                elements.startCallBtn.disabled = true;
+                elements.endCallBtn.disabled = true;
+                elements.startDistractionBtn.disabled = true;
+                elements.endDistractionBtn.disabled = true;
+                elements.callLabel.disabled = true;
+                elements.callOutcome.disabled = true;
+                elements.callNotes.disabled = true;
+                
+                elements.sessionSection.classList.remove('active');
+                elements.callSection.classList.remove('active', 'warning', 'danger');
+                elements.distractionSection.classList.remove('active');
+                
+                elements.callLog.style.display = 'none';
+                elements.noteSection.style.display = 'none';
+                elements.sessionSummary.style.display = 'none';
+                
+                updateGoalProgress();
+                localStorage.removeItem('callTimerData');
+                stopAutosave();
             }
-            return field;
-        }
-
-        // Export stats function
-        function exportStats() {
-            const calls = entries.filter(e => e.type === 'call');
-            const totalCalls = calls.length;
-            
-            if (totalCalls === 0) {
-                alert('No calls to calculate stats');
-                return;
-            }
-            
-            // Calculate stats
-            const sessionDuration = (sessionEndTime || Date.now()) - sessionStartTime;
-            const totalPledges = calls.reduce((sum, call) => sum + (call.pledgeAmount || 0), 0);
-            const avgCallTime = calls.reduce((sum, call) => sum + call.duration, 0) / totalCalls;
-            
-            // Calculate connection rate
-            const connectedCalls = calls.filter(call => 
-                call.outcome === 'answered' || 
-                call.outcome === 'answered-busy' || 
-                call.outcome === 'pledge' ||
-                call.outcome === 'callback' ||
-                call.outcome === 'refused'
-            ).length;
-            const connectionRate = ((connectedCalls / totalCalls) * 100).toFixed(1);
-            
-            // Calculate outcome breakdown
-            const outcomeBreakdown = {};
-            calls.forEach(call => {
-                const outcome = call.outcome || 'no-outcome';
-                outcomeBreakdown[outcome] = (outcomeBreakdown[outcome] || 0) + 1;
-            });
-            
-            // Create stats report
-            let stats = 'Call Session Statistics\n';
-            stats += '======================\n\n';
-            stats += `Date: ${new Date().toLocaleDateString()}\n`;
-            stats += `Session Duration: ${formatTime(sessionDuration)}\n`;
-            stats += `Total Calls: ${totalCalls}\n`;
-            stats += `Connected Calls: ${connectedCalls}\n`;
-            stats += `Connection Rate: ${connectionRate}%\n`;
-            stats += `Average Call Time: ${formatShortTime(avgCallTime)}\n`;
-            stats += `Total Pledges: ${totalPledges}\n`;
-            stats += `Best Streak: ${bestStreak} calls\n`;
-            stats += `Total Breaks: ${formatTime(distractionElapsed)}\n\n`;
-            
-            stats += 'Outcome Breakdown:\n';
-            stats += '-----------------\n';
-            Object.entries(outcomeBreakdown).forEach(([outcome, count]) => {
-                stats += `${getOutcomeLabel(outcome)}: ${count} (${((count/totalCalls)*100).toFixed(1)}%)\n`;
-            });
-            
-            // Create blob and download
-            const blob = new Blob([stats], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `call-stats-${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
         }
 
         // Autosave functions
         function startAutosave() {
+            // Save immediately when starting
+            saveToStorage();
+            
+            // Then save every 30 seconds
             autosaveInterval = setInterval(saveToStorage, 30000);
         }
 
@@ -2938,7 +2562,7 @@
         function saveToStorage() {
             try {
                 const data = {
-                    version: 3, // Updated version for new fields
+                    version: 2, // Version for migration purposes
                     sessionStartTime,
                     sessionEndTime,
                     callStartTime,
@@ -2949,26 +2573,15 @@
                     isCallActive,
                     isDistractionActive,
                     callLabel: elements.callLabel.value,
-                    vanId: elements.vanId.value,
                     callOutcome: elements.callOutcome.value,
                     callNotes: elements.callNotes.value,
                     pledgeAmount: elements.pledgeAmount.value,
                     quickNote: elements.quickNote.value,
                     dailyGoal,
-                    financialGoal,
-                    currentStreak,
-                    bestStreak,
-                    lastCallEndTime
+                    financialGoal
                 };
                 
                 localStorage.setItem('callTimerData', JSON.stringify(data));
-                
-                // Show save indicator
-                const indicator = document.getElementById('autosaveIndicator');
-                indicator.classList.add('show');
-                setTimeout(() => {
-                    indicator.classList.remove('show');
-                }, 2000);
             } catch (e) {
                 console.error('Error saving to storage:', e);
             }
@@ -2981,42 +2594,39 @@
             try {
                 const data = JSON.parse(stored);
                 
-                // Handle migration from older versions
-                if (!data.version || data.version < 3) {
-                    // Convert old calls array to new entries format if needed
+                // Handle migration from version 1
+                if (!data.version || data.version === 1) {
+                    // Convert old calls array to new entries format
                     if (data.calls) {
                         entries = data.calls.map(call => ({
                             type: 'call',
                             startTime: new Date(call.startTime),
                             endTime: new Date(call.endTime),
                             duration: call.duration,
-                            label: call.label || '',
-                            vanId: call.vanId || '',
-                            outcome: call.outcome || '',
-                            pledgeAmount: call.pledgeAmount || 0,
-                            notes: call.notes || ''
+                            label: call.label,
+                            outcome: '',
+                            notes: call.notes
                         }));
                     }
                 } else {
-                    // Load entries with proper date parsing
-                    entries = (data.entries || []).map(entry => {
+                    entries = data.entries || [];
+                    // Convert stored dates back to Date objects
+                    entries = entries.map(entry => {
                         if (entry.type === 'call') {
                             return {
                                 ...entry,
                                 startTime: new Date(entry.startTime),
                                 endTime: new Date(entry.endTime)
                             };
-                        } else if (entry.type === 'note') {
+                        } else {
                             return {
                                 ...entry,
                                 timestamp: new Date(entry.timestamp)
                             };
                         }
-                        return entry;
                     });
                 }
                 
-                // Restore state
                 sessionStartTime = data.sessionStartTime;
                 sessionEndTime = data.sessionEndTime;
                 callStartTime = data.callStartTime;
@@ -3027,31 +2637,23 @@
                 isDistractionActive = data.isDistractionActive || false;
                 dailyGoal = data.dailyGoal || 50;
                 financialGoal = data.financialGoal || 1000;
-                currentStreak = data.currentStreak || 0;
-                bestStreak = data.bestStreak || 0;
-                lastCallEndTime = data.lastCallEndTime || null;
                 
-                // Restore input values
-                elements.callLabel.value = data.callLabel || '';
-                elements.vanId.value = data.vanId || '';
-                elements.callOutcome.value = data.callOutcome || '';
-                elements.callNotes.value = data.callNotes || '';
-                elements.pledgeAmount.value = data.pledgeAmount || '';
-                elements.quickNote.value = data.quickNote || '';
-                elements.goalInput.value = dailyGoal;
-                elements.financialGoalInput.value = financialGoal;
+                // Restore UI state
+                if (dailyGoal) {
+                    elements.goalInput.value = dailyGoal;
+                }
+                if (financialGoal) {
+                    elements.financialGoalInput.value = financialGoal;
+                }
                 
-                // Update display based on state
                 if (isSessionActive) {
                     elements.startSessionBtn.disabled = true;
                     elements.stopSessionBtn.disabled = false;
                     elements.startCallBtn.disabled = false;
                     elements.startDistractionBtn.disabled = false;
                     elements.callLabel.disabled = false;
-                    elements.vanId.disabled = false;
                     elements.callOutcome.disabled = false;
                     elements.callNotes.disabled = false;
-                    elements.pledgeAmount.disabled = false;
                     elements.sessionSection.classList.add('active');
                     elements.callLog.style.display = 'block';
                     elements.noteSection.style.display = 'block';
@@ -3070,123 +2672,80 @@
                     elements.distractionSection.classList.add('active');
                 }
                 
+                if (data.callLabel) elements.callLabel.value = data.callLabel;
+                if (data.callOutcome) elements.callOutcome.value = data.callOutcome;
+                if (data.callNotes) elements.callNotes.value = data.callNotes;
+                if (data.pledgeAmount) elements.pledgeAmount.value = data.pledgeAmount;
+                if (data.quickNote) elements.quickNote.value = data.quickNote;
+                
                 updateCallLog();
                 updateGoalProgress();
-                updateQuickStats();
-                handleOutcomeChange();
+                
+                if (sessionEndTime) {
+                    showSummary();
+                }
                 
             } catch (e) {
-                console.error('Error loading from storage:', e);
+                console.error('Error loading saved data:', e);
+                // If data is corrupted, clear it
+                localStorage.removeItem('callTimerData');
             }
         }
 
-        // Undo last call function
-        function undoLastCall() {
-            if (entries.length === 0) return;
-            
-            const lastEntry = entries[entries.length - 1];
-            if (lastEntry.type !== 'call') return;
-            
-            if (confirm('Are you sure you want to undo the last call?')) {
-                // Remove the last call
-                entries.pop();
-                
-                // Recalculate streak
-                currentStreak = 0;
-                const calls = entries.filter(e => e.type === 'call');
-                const successfulOutcomes = ['answered', 'answered-busy', 'pledge', 'callback'];
-                
-                // Recalculate streak from remaining calls
-                for (let i = calls.length - 1; i >= 0; i--) {
-                    if (successfulOutcomes.includes(calls[i].outcome)) {
-                        currentStreak++;
-                    } else if (calls[i].outcome && calls[i].outcome !== 'voicemail') {
-                        break;
-                    }
-                }
-                
-                // Update last call time
-                if (calls.length > 0) {
-                    lastCallEndTime = calls[calls.length - 1].endTime.getTime();
-                } else {
-                    lastCallEndTime = null;
-                }
-                
-                updateCallLog();
-                updateGoalProgress();
-                updateQuickStats();
-                saveToStorage();
+        // Event listeners
+        elements.goalInput.addEventListener('change', (e) => {
+            dailyGoal = parseInt(e.target.value) || 50;
+            updateGoalProgress();
+            saveToStorage();
+        });
+        
+        elements.financialGoalInput.addEventListener('change', (e) => {
+            financialGoal = parseInt(e.target.value) || 1000;
+            updateGoalProgress();
+            saveToStorage();
+        });
+        
+        // Show/hide pledge fields when outcome changes
+        elements.callOutcome.addEventListener('change', (e) => {
+            if (e.target.value === 'pledge') {
+                elements.pledgeFields.classList.add('show');
+            } else {
+                elements.pledgeFields.classList.remove('show');
+                elements.pledgeAmount.value = '';
             }
-        }
+            saveToStorage();
+        });
+        
+        elements.startSessionBtn.addEventListener('click', startSession);
+        elements.stopSessionBtn.addEventListener('click', stopSession);
+        elements.startCallBtn.addEventListener('click', startCall);
+        elements.endCallBtn.addEventListener('click', endCall);
+        elements.addNoteBtn.addEventListener('click', addNote);
+        elements.startDistractionBtn.addEventListener('click', startDistraction);
+        elements.endDistractionBtn.addEventListener('click', endDistraction);
+        elements.exportCsvBtn.addEventListener('click', exportCsv);
+        elements.clearSessionBtn.addEventListener('click', clearSession);
+
+        // Auto-save on input
+        elements.callLabel.addEventListener('input', saveToStorage);
+        elements.callNotes.addEventListener('input', saveToStorage);
+        elements.pledgeAmount.addEventListener('input', saveToStorage);
+        elements.quickNote.addEventListener('input', saveToStorage);
 
         // Initialize
         loadFromStorage();
-        updateGoalProgress();
-        updateQuickStats();
-        setInterval(updateDisplays, 100);
-        
-        // Set initial encouraging message if no session active
-        if (!isSessionActive) {
-            document.getElementById('footerMessage').textContent = `💫 Ready to make a difference? Let's go!`;
+        setInterval(updateDisplays, 1000);
+
+        // QR Code Modal functions
+        function showQRCode(event) {
+            event.preventDefault();
+            document.getElementById('qrModal').style.display = 'block';
         }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Prevent shortcuts when typing in inputs
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-                return;
-            }
-
-            // Space bar to start/end call
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (isSessionActive && !isCallActive && !elements.startCallBtn.disabled) {
-                    startCall();
-                } else if (isCallActive && !elements.endCallBtn.disabled) {
-                    endCall();
-                }
-            }
-
-            // S to start session
-            if (e.key.toLowerCase() === 's' && !isSessionActive) {
-                startSession();
-            }
-
-            // N for quick note (Ctrl/Cmd + N)
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n' && isSessionActive) {
-                e.preventDefault();
-                elements.noteSection.classList.remove('collapsed');
-                elements.quickNote.focus();
-            }
-
-            // B for break
-            if (e.key.toLowerCase() === 'b' && isSessionActive) {
-                if (!isDistractionActive && !elements.startDistractionBtn.disabled) {
-                    startDistraction();
-                } else if (isDistractionActive && !elements.endDistractionBtn.disabled) {
-                    endDistraction();
-                }
-            }
-
-            // Number keys 1-9 for quick outcomes during call
-            if (isCallActive && e.key >= '1' && e.key <= '9') {
-                const outcomeMap = {
-                    '1': 'answered',
-                    '2': 'answered-busy',
-                    '3': 'no-answer',
-                    '4': 'voicemail',
-                    '5': 'bad-number',
-                    '6': 'wrong-number',
-                    '7': 'refused',
-                    '8': 'callback',
-                    '9': 'pledge'
-                };
-                if (outcomeMap[e.key]) {
-                    elements.callOutcome.value = outcomeMap[e.key];
-                    handleOutcomeChange();
-                }
-            }
-        });
+        function hideQRCode(event) {
+            event.preventDefault();
+            document.getElementById('qrModal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
