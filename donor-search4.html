@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Contribution Research Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 0;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #1e3a5f;
+            color: white;
+            padding: 20px;
+            border-bottom: 4px solid #2c5282;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            opacity: 0.85;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .content {
+            padding: 0;
+        }
+
+        .section {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: white;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .section-header:active {
+            background: #f8fafc;
+        }
+
+        .section-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .section-toggle {
+            font-size: 20px;
+            color: #718096;
+            transition: transform 0.2s;
+        }
+
+        .section-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1200px;
+                border-radius: 8px;
+                margin: 20px auto;
+                min-height: calc(100vh - 40px);
+            }
+            
+            .header {
+                border-radius: 8px 8px 0 0;
+                padding: 30px 40px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+                margin-bottom: 8px;
+            }
+            
+            .header p {
+                font-size: 15px;
+            }
+            
+            .section-header {
+                padding: 20px 40px;
+            }
+            
+            .section-content {
+                padding: 30px 40px;
+            }
+            
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        input, select, textarea {
+            padding: 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s;
+            background: white;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="file"] {
+            border: 2px dashed #cbd5e0;
+            background: #f8fafc;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 16px;
+            width: 100%;
+        }
+
+        input[type="file"]:hover {
+            border-color: #2c5282;
+            background: #e6f2ff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2c5282;
+            box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (min-width: 768px) {
+            .btn {
+                width: auto;
+            }
+        }
+
+        .btn-primary {
+            background: #2c5282;
+            color: white;
+        }
+
+        .btn-primary:active {
+            background: #1e3a5f;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2c3e50;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:active {
+            background: #cbd5e0;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 50px 16px 16px;
+            font-size: 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .results-container {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 150px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #2c5282;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .donor-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .donation-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        @media (min-width: 640px) {
+            .donation-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .donation-info {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #718096;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 0;
+            padding: 20px;
+            background: white;
+        }
+
+        @media (min-width: 640px) {
+            .stats {
+                gap: 15px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .stats {
+                padding: 30px 40px;
+            }
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c5282;
+            margin-bottom: 6px;
+            letter-spacing: -1px;
+        }
+
+        @media (min-width: 640px) {
+            .stat-value {
+                font-size: 32px;
+            }
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #a0aec0;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+
+        .bulk-import {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .button-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+
+        .delete-btn {
+            background: white;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .delete-btn:active {
+            background: #fff5f5;
+            border-color: #fc8181;
+        }
+
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #2c5282;
+        }
+
+        select.mapper-select {
+            padding: 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        button:disabled,
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:disabled:active,
+        .btn:disabled:active {
+            transform: none;
+            box-shadow: none;
+            background: inherit;
+        }
+
+        #pagination {
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        @media (min-width: 640px) {
+            #pagination {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        #pagination button {
+            min-width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            #pagination button {
+                min-width: 120px;
+            }
+        }
+
+        .filter-summary {
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-summary-text {
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .filter-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Political Contribution Research Tool</h1>
+            <p>Upload FEC CSV files or paste data • Smart merge • Fuzzy search • Detailed donor intelligence</p>
+        </div>
+
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalDonors">0</div>
+                    <div class="stat-label">Contributors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRecords">0</div>
+                    <div class="stat-label">Contributions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCandidates">0</div>
+                    <div class="stat-label">Committees</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('search')">
+                    <h2>🔎 Search Contributors</h2>
+                    <span class="section-toggle open" id="toggle-search">▼</span>
+                </div>
+                <div class="section-content open" id="content-search">
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Type donor name..."
+                            autocomplete="off"
+                        >
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="results-container" id="resultsContainer">
+                        <div class="no-results">Enter a name to search contribution records</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('browse')">
+                    <h2>📊 Browse & Filter</h2>
+                    <span class="section-toggle" id="toggle-browse">▼</span>
+                </div>
+                <div class="section-content" id="content-browse">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="filterCommittee">Committee</label>
+                            <input type="text" id="filterCommittee" placeholder="Any committee">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterState">State</label>
+                            <input type="text" id="filterState" placeholder="Any state" maxlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterEmployer">Employer</label>
+                            <input type="text" id="filterEmployer" placeholder="Any employer">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterOccupation">Occupation</label>
+                            <input type="text" id="filterOccupation" placeholder="Any occupation">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterMinAmount">Min Amount ($)</label>
+                            <input type="number" id="filterMinAmount" placeholder="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterMaxAmount">Max Amount ($)</label>
+                            <input type="number" id="filterMaxAmount" placeholder="Any" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterStartDate">From Date</label>
+                            <input type="date" id="filterStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterEndDate">To Date</label>
+                            <input type="date" id="filterEndDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="sortBy">Sort By</label>
+                        <select id="sortBy" class="mapper-select">
+                            <option value="date-desc">Date (Newest First)</option>
+                            <option value="date-asc">Date (Oldest First)</option>
+                            <option value="amount-desc">Amount (High to Low)</option>
+                            <option value="amount-asc">Amount (Low to High)</option>
+                            <option value="name-asc">Name (A to Z)</option>
+                            <option value="name-desc">Name (Z to A)</option>
+                            <option value="committee-asc">Committee (A to Z)</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                        <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+                        <button class="btn btn-secondary" onclick="exportFiltered()">Export Results</button>
+                    </div>
+
+                    <div class="filter-summary" style="margin-top: 20px;">
+                        <div class="filter-summary-text">
+                            <strong id="browseCount">0</strong> contributions
+                            <span id="browseTotal" style="color: #718096;"></span>
+                        </div>
+                        <div class="filter-controls">
+                            <span style="color: #718096;">Show:</span>
+                            <select id="pageSize" class="mapper-select" style="padding: 8px 12px; font-size: 14px; width: auto;" onchange="applyFilters()">
+                                <option value="25">25</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="results-container" id="browseContainer">
+                        <div class="no-results">Click "Apply Filters" to browse</div>
+                    </div>
+
+                    <div id="pagination" style="display: none;">
+                        <button class="btn btn-secondary" onclick="previousPage()" id="prevBtn">← Previous</button>
+                        <div style="font-size: 14px; color: #4a5568;">
+                            Page <strong id="currentPage">1</strong> of <strong id="totalPages">1</strong>
+                        </div>
+                        <button class="btn btn-secondary" onclick="nextPage()" id="nextBtn">Next →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('add')">
+                    <h2>➕ Add Contribution</h2>
+                    <span class="section-toggle" id="toggle-add">▼</span>
+                </div>
+                <div class="section-content" id="content-add">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="donorName">Donor Name *</label>
+                            <input type="text" id="donorName" placeholder="John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="candidateName">Committee *</label>
+                            <input type="text" id="candidateName" placeholder="Campaign Committee" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contributionDate">Date *</label>
+                            <input type="date" id="contributionDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalAmount">Amount *</label>
+                            <input type="number" id="totalAmount" placeholder="2500" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="employer">Employer</label>
+                            <input type="text" id="employer" placeholder="Acme Corp">
+                        </div>
+                        <div class="form-group">
+                            <label for="occupation">Occupation</label>
+                            <input type="text" id="occupation" placeholder="Engineer">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" placeholder="Chicago">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" placeholder="IL" maxlength="2">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addDonor()">Add Contribution</button>
+                        <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('import')">
+                    <h2>📥 Import FEC Data</h2>
+                    <span class="section-toggle" id="toggle-import">▼</span>
+                </div>
+                <div class="section-content" id="content-import">
+                    <div style="margin-bottom: 20px;">
+                        <label for="csvFile" style="display: block; margin-bottom: 8px; font-weight: 600;">📁 Upload CSV File</label>
+                        <input 
+                            type="file" 
+                            id="csvFile" 
+                            accept=".csv,.txt"
+                            onchange="handleFileUpload(event)"
+                        >
+                        <div class="help-text" style="margin-top: 8px;">Click to upload your FEC CSV file (auto-imports after upload)</div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 20px 0; color: #a0aec0; font-size: 13px; font-weight: 600;">
+                        — OR PASTE TEXT —
+                    </div>
+                    
+                    <label for="bulkData">Paste CSV Text Manually</label>
+                    <textarea id="bulkData" placeholder="contributor_name,committee_name,contribution_receipt_date,contribution_receipt_amount,...
+John Smith,Campaign Committee,2024-01-15,2500,..."></textarea>
+                    <div class="help-text">Paste FEC data directly, then click "Process Import" below</div>
+                    
+                    <div style="margin: 16px 0;">
+                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Import Mode:</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: normal;">
+                                <input type="radio" name="importMode" value="smart" checked style="width: auto;">
+                                <span><strong>Smart merge</strong> - Combine earmarked contributions</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: normal;">
+                                <input type="radio" name="importMode" value="individuals" style="width: auto;">
+                                <span>Individual donors only</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: normal;">
+                                <input type="radio" name="importMode" value="all" style="width: auto;">
+                                <span>Import all records</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="smartImport()">Process Import</button>
+                        <button class="btn btn-secondary" onclick="showManualMapper()">Manual Mapping</button>
+                        <button class="btn btn-secondary" onclick="exportData()">Export All</button>
+                        <button class="btn btn-secondary" onclick="clearAllData()">Clear All</button>
+                    </div>
+                    
+                    <div id="manualMapper" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <div style="font-weight: 600; margin-bottom: 15px; color: #1e3a5f;">Manual Column Mapping</div>
+                        <div style="font-size: 13px; color: #718096; margin-bottom: 15px;">
+                            Select which column contains each type of data.
+                        </div>
+                        <div id="mapperContent"></div>
+                        <div class="button-group" style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="applyManualMapping()">Apply & Import</button>
+                            <button class="btn btn-secondary" onclick="cancelManualMapping()">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <div id="importPreview" style="display: none; margin-top: 20px; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <div style="font-weight: 600; margin-bottom: 10px; color: #1e3a5f;">Import Preview</div>
+                        <div id="previewContent"></div>
+                        <div class="button-group" style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="confirmImport()">Confirm Import</button>
+                            <button class="btn btn-secondary" onclick="adjustMapping()">Adjust Mapping</button>
+                            <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // In-memory storage for donor records
+        let donorRecords = [];
+
+        // Toggle section expand/collapse
+        function toggleSection(sectionId) {
+            const content = document.getElementById('content-' + sectionId);
+            const toggle = document.getElementById('toggle-' + sectionId);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                toggle.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                toggle.classList.add('open');
+            }
+        }
+
+        // Levenshtein distance for fuzzy matching
+        function levenshteinDistance(str1, str2) {
+            str1 = str1.toLowerCase();
+            str2 = str2.toLowerCase();
+            
+            const len1 = str1.length;
+            const len2 = str2.length;
+            const matrix = [];
+
+            // Initialize matrix
+            for (let i = 0; i <= len1; i++) {
+                matrix[i] = [i];
+            }
+            for (let j = 0; j <= len2; j++) {
+                matrix[0][j] = j;
+            }
+
+            // Fill matrix
+            for (let i = 1; i <= len1; i++) {
+                for (let j = 1; j <= len2; j++) {
+                    if (str1[i - 1] === str2[j - 1]) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1, // substitution
+                            matrix[i][j - 1] + 1,     // insertion
+                            matrix[i - 1][j] + 1      // deletion
+                        );
+                    }
+                }
+            }
+
+            return matrix[len1][len2];
+        }
+
+        // Calculate similarity score (0-1, where 1 is exact match)
+        function similarityScore(str1, str2) {
+            const distance = levenshteinDistance(str1, str2);
+            const maxLength = Math.max(str1.length, str2.length);
+            return 1 - (distance / maxLength);
+        }
+
+        // Check if names are similar enough for fuzzy matching
+        function isFuzzyMatch(searchTerm, donorName, threshold = 0.7) {
+            searchTerm = searchTerm.toLowerCase();
+            donorName = donorName.toLowerCase();
+
+            // Direct substring match (fastest, keep this)
+            if (donorName.includes(searchTerm)) {
+                return { match: true, score: 1.0, type: 'exact' };
+            }
+
+            // Check each word in the donor name against the search term
+            const donorWords = donorName.split(' ');
+            const searchWords = searchTerm.split(' ');
+
+            for (const donorWord of donorWords) {
+                for (const searchWord of searchWords) {
+                    const score = similarityScore(searchWord, donorWord);
+                    if (score >= threshold) {
+                        return { match: true, score: score, type: 'fuzzy' };
+                    }
+                }
+            }
+
+            // Also check full name similarity for shorter searches
+            if (searchTerm.length >= 3) {
+                const fullScore = similarityScore(searchTerm, donorName);
+                if (fullScore >= threshold) {
+                    return { match: true, score: fullScore, type: 'fuzzy' };
+                }
+            }
+
+            return { match: false, score: 0, type: 'none' };
+        }
+
+        // Initialize with sample data
+        function initializeSampleData() {
+            donorRecords = [
+                {
+                    id: 1,
+                    donorName: "John Smith",
+                    candidateName: "Jane Doe",
+                    contributionDate: "2024-01-15",
+                    amount: 2500,
+                    employer: "Tech Corp",
+                    occupation: "Software Engineer",
+                    city: "Chicago",
+                    state: "IL"
+                },
+                {
+                    id: 2,
+                    donorName: "Mary Johnson",
+                    candidateName: "Bob Wilson",
+                    contributionDate: "2024-03-22",
+                    amount: 1000,
+                    employer: "Medical Center",
+                    occupation: "Nurse",
+                    city: "Springfield",
+                    state: "IL"
+                },
+                {
+                    id: 3,
+                    donorName: "John Smith",
+                    candidateName: "Bob Wilson",
+                    contributionDate: "2023-12-10",
+                    amount: 500,
+                    employer: "Tech Corp",
+                    occupation: "Software Engineer",
+                    city: "Chicago",
+                    state: "IL"
+                },
+                {
+                    id: 4,
+                    donorName: "David Brown",
+                    candidateName: "Jane Doe",
+                    contributionDate: "2024-02-28",
+                    amount: 3000,
+                    employer: "Law Firm",
+                    occupation: "Attorney",
+                    city: "Naperville",
+                    state: "IL"
+                }
+            ];
+            updateStats();
+        }
+
+        // Add a new donor record
+        function addDonor() {
+            const donorName = document.getElementById('donorName').value.trim();
+            const candidateName = document.getElementById('candidateName').value.trim();
+            const contributionDate = document.getElementById('contributionDate').value;
+            const amount = parseFloat(document.getElementById('totalAmount').value);
+            const employer = document.getElementById('employer').value.trim();
+            const occupation = document.getElementById('occupation').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim().toUpperCase();
+
+            if (!donorName || !candidateName || !contributionDate || isNaN(amount)) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+
+            const newRecord = {
+                id: Date.now(),
+                donorName: donorName,
+                candidateName: candidateName,
+                contributionDate: contributionDate,
+                amount: amount,
+                employer: employer,
+                occupation: occupation,
+                city: city,
+                state: state
+            };
+
+            donorRecords.push(newRecord);
+            updateStats();
+            clearForm();
+            
+            // Show the newly added record
+            document.getElementById('searchInput').value = donorName;
+            searchDonors();
+        }
+
+        // Clear the input form
+        function clearForm() {
+            document.getElementById('donorName').value = '';
+            document.getElementById('candidateName').value = '';
+            document.getElementById('contributionDate').value = '';
+            document.getElementById('totalAmount').value = '';
+            document.getElementById('employer').value = '';
+            document.getElementById('occupation').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('state').value = '';
+        }
+
+        // Search donors by name (full or partial match)
+        function searchDonors() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            if (!searchTerm) {
+                resultsContainer.innerHTML = '<div class="no-results">Enter a name to search donor records</div>';
+                return;
+            }
+
+            // Find matches with scores
+            const results = donorRecords.map(record => {
+                const matchResult = isFuzzyMatch(searchTerm, record.donorName);
+                return {
+                    ...record,
+                    matchScore: matchResult.score,
+                    matchType: matchResult.match ? matchResult.type : 'none',
+                    isMatch: matchResult.match
+                };
+            }).filter(r => r.isMatch);
+
+            // Sort by match quality (exact matches first, then by score)
+            results.sort((a, b) => {
+                if (a.matchType === 'exact' && b.matchType !== 'exact') return -1;
+                if (a.matchType !== 'exact' && b.matchType === 'exact') return 1;
+                return b.matchScore - a.matchScore;
+            });
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="no-results">No matching donors found<br><small style="margin-top: 10px; display: block;">Try adjusting your search term</small></div>';
+                return;
+            }
+
+            // Group results by donor name
+            const groupedResults = {};
+            results.forEach(record => {
+                if (!groupedResults[record.donorName]) {
+                    groupedResults[record.donorName] = {
+                        donations: [],
+                        matchType: record.matchType,
+                        matchScore: record.matchScore
+                    };
+                }
+                groupedResults[record.donorName].donations.push(record);
+            });
+
+            let html = '';
+            Object.keys(groupedResults).forEach(donorName => {
+                const group = groupedResults[donorName];
+                const donations = group.donations;
+                const totalAcrossAll = donations.reduce((sum, d) => sum + d.amount, 0);
+                
+                // Add match quality indicator
+                const matchBadge = group.matchType === 'fuzzy' 
+                    ? `<span style="background: #ffc107; color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px;">~${Math.round(group.matchScore * 100)}% match</span>`
+                    : '';
+                
+                html += `<div class="result-item">
+                    <div class="donor-name">${donorName}${matchBadge}</div>
+                    <div style="font-size: 12px; color: #888; margin-bottom: 10px;">
+                        ${donations.length} contribution(s) • Total: $${totalAcrossAll.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </div>`;
+                
+                donations.forEach(record => {
+                    html += `
+                    <div class="donation-info" style="margin-bottom: 10px; padding: 12px; background: #f8f9fa; border-radius: 4px;">
+                        <div class="info-item">
+                            <div class="info-label">Committee</div>
+                            <div class="info-value">${record.candidateName}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date</div>
+                            <div class="info-value">${formatDate(record.contributionDate)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Amount</div>
+                            <div class="info-value">$${record.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        </div>
+                        ${record.employer ? `
+                        <div class="info-item">
+                            <div class="info-label">Employer</div>
+                            <div class="info-value">${record.employer}</div>
+                        </div>` : ''}
+                        ${record.occupation ? `
+                        <div class="info-item">
+                            <div class="info-label">Occupation</div>
+                            <div class="info-value">${record.occupation}</div>
+                        </div>` : ''}
+                        ${record.city || record.state ? `
+                        <div class="info-item">
+                            <div class="info-label">Location</div>
+                            <div class="info-value">${record.city ? record.city : ''}${record.city && record.state ? ', ' : ''}${record.state ? record.state : ''}</div>
+                        </div>` : ''}
+                        <div class="info-item">
+                            <button class="delete-btn" onclick="deleteRecord(${record.id})">Delete</button>
+                        </div>
+                    </div>`;
+                });
+                
+                html += '</div>';
+            });
+
+            resultsContainer.innerHTML = html;
+        }
+
+        // Delete a record
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                donorRecords = donorRecords.filter(record => record.id !== id);
+                updateStats();
+                searchDonors(); // Refresh search results
+                
+                // Refresh browse view if filters are active
+                if (filteredRecords.length > 0) {
+                    applyFilters();
+                }
+            }
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Update statistics
+        function updateStats() {
+            const uniqueDonors = new Set(donorRecords.map(r => r.donorName.toLowerCase())).size;
+            const uniqueCandidates = new Set(donorRecords.map(r => r.candidateName.toLowerCase())).size;
+            
+            document.getElementById('totalDonors').textContent = uniqueDonors;
+            document.getElementById('totalRecords').textContent = donorRecords.length;
+            document.getElementById('totalCandidates').textContent = uniqueCandidates;
+        }
+
+        // Bulk import from CSV format
+        function bulkImport() {
+            const bulkData = document.getElementById('bulkData').value.trim();
+            if (!bulkData) {
+                alert('Please enter data to import');
+                return;
+            }
+
+            const lines = bulkData.split('\n');
+            let imported = 0;
+            let errors = 0;
+
+            lines.forEach((line, index) => {
+                const parts = line.split(',').map(p => p.trim());
+                if (parts.length !== 4) {
+                    errors++;
+                    return;
+                }
+
+                const [donorName, candidateName, date, amount] = parts;
+                const parsedAmount = parseFloat(amount);
+
+                if (!donorName || !candidateName || !date || isNaN(parsedAmount)) {
+                    errors++;
+                    return;
+                }
+
+                donorRecords.push({
+                    id: Date.now() + index,
+                    donorName: donorName,
+                    candidateName: candidateName,
+                    contributionDate: date,
+                    amount: parsedAmount,
+                    employer: '',
+                    occupation: '',
+                    city: '',
+                    state: ''
+                });
+                imported++;
+            });
+
+            updateStats();
+            document.getElementById('bulkData').value = '';
+            alert(`Import complete!\nImported: ${imported} records\nErrors: ${errors} records`);
+        }
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check file type
+            if (!file.name.endsWith('.csv') && !file.name.endsWith('.txt')) {
+                alert('Please upload a CSV or TXT file');
+                event.target.value = ''; // Reset file input
+                return;
+            }
+
+            // Show loading message
+            const textarea = document.getElementById('bulkData');
+            textarea.value = 'Loading file...';
+            textarea.style.background = '#f8fafc';
+
+            // Read file
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contents = e.target.result;
+                textarea.value = contents;
+                textarea.style.background = 'white';
+                
+                // Show success message briefly
+                const fileName = file.name;
+                const fileSize = (file.size / 1024).toFixed(1);
+                textarea.placeholder = `Loaded: ${fileName} (${fileSize} KB) - Ready to import`;
+                
+                // Auto-trigger smart import after brief delay
+                setTimeout(() => {
+                    smartImport();
+                }, 200);
+            };
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
+                textarea.value = '';
+                textarea.style.background = 'white';
+                event.target.value = ''; // Reset file input
+            };
+            reader.readAsText(file);
+        }
+
+        // Smart import with column header detection
+        let pendingImportData = null;
+        let currentHeaders = null;
+        let savedColumnMapping = null;
+
+        function smartImport() {
+            const bulkData = document.getElementById('bulkData').value.trim();
+            if (!bulkData) {
+                alert('Please enter data to import');
+                return;
+            }
+
+            const lines = bulkData.split('\n').filter(line => line.trim());
+            if (lines.length < 2) {
+                alert('Please include headers and at least one data row');
+                return;
+            }
+
+            // Get import mode
+            const importMode = document.querySelector('input[name="importMode"]:checked')?.value || 'smart';
+
+            // Parse CSV properly (handle quoted fields)
+            function parseCSVLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
+
+            // Get headers and data
+            const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+            currentHeaders = headers;
+            const dataLines = lines.slice(1);
+
+            // Try saved mapping first if available
+            let nameCol = -1, candidateCol = -1, dateCol = -1, amountCol = -1;
+            let entityTypeCol = -1, transactionIdCol = -1;
+            let employerCol = -1, occupationCol = -1, cityCol = -1, stateCol = -1;
+            
+            if (savedColumnMapping) {
+                nameCol = headers.indexOf(savedColumnMapping.donor.toLowerCase());
+                candidateCol = headers.indexOf(savedColumnMapping.candidate.toLowerCase());
+                dateCol = headers.indexOf(savedColumnMapping.date.toLowerCase());
+                amountCol = headers.indexOf(savedColumnMapping.amount.toLowerCase());
+                
+                if (nameCol !== -1 && candidateCol !== -1 && dateCol !== -1 && amountCol !== -1) {
+                    console.log('Using saved column mapping');
+                } else {
+                    savedColumnMapping = null; // Reset if mapping doesn't match
+                }
+            }
+
+            // If no saved mapping or it didn't work, use auto-detection
+            if (nameCol === -1 || candidateCol === -1 || dateCol === -1 || amountCol === -1) {
+                // Column mapping patterns for common FEC and other formats
+                const namePatterns = ['contributor_name', 'contributor', 'donor_name', 'donor', 'name', 'individual_name', 'person_name', 'contributor_first_name'];
+                const candidatePatterns = ['committee_name', 'candidate_name', 'candidate', 'recipient_name', 'recipient', 'committee', 'payee_name', 'committee_id'];
+                const datePatterns = ['contribution_receipt_date', 'contribution_date', 'transaction_date', 'date', 'receipt_date', 'transaction_dt'];
+                const amountPatterns = ['contribution_receipt_amount', 'contribution_amount', 'transaction_amount', 'amount', 'total', 'receipt_amount', 'transaction_amt'];
+
+                // Find matching columns
+                function findColumnIndex(patterns) {
+                    for (const pattern of patterns) {
+                        const index = headers.findIndex(h => h.includes(pattern) || pattern.includes(h));
+                        if (index !== -1) return index;
+                    }
+                    return -1;
+                }
+
+                nameCol = findColumnIndex(namePatterns);
+                candidateCol = findColumnIndex(candidatePatterns);
+                dateCol = findColumnIndex(datePatterns);
+                amountCol = findColumnIndex(amountPatterns);
+            }
+
+            // Find additional FEC columns (optional fields)
+            const employerPatterns = ['contributor_employer', 'employer'];
+            const occupationPatterns = ['contributor_occupation', 'occupation'];
+            const cityPatterns = ['contributor_city', 'city'];
+            const statePatterns = ['contributor_state', 'state'];
+
+            function findColumnIndex(patterns) {
+                for (const pattern of patterns) {
+                    const index = headers.findIndex(h => h.includes(pattern) || pattern.includes(h));
+                    if (index !== -1) return index;
+                }
+                return -1;
+            }
+
+            employerCol = findColumnIndex(employerPatterns);
+            occupationCol = findColumnIndex(occupationPatterns);
+            cityCol = findColumnIndex(cityPatterns);
+            stateCol = findColumnIndex(statePatterns);
+
+            // Find entity_type and transaction_id columns for smart merge
+            entityTypeCol = headers.indexOf('entity_type');
+            transactionIdCol = headers.indexOf('transaction_id');
+
+            // Validate that we found all required columns
+            const missing = [];
+            if (nameCol === -1) missing.push('donor/contributor name');
+            if (candidateCol === -1) missing.push('candidate/committee name');
+            if (dateCol === -1) missing.push('date');
+            if (amountCol === -1) missing.push('amount');
+
+            if (missing.length > 0) {
+                alert(`Could not auto-detect columns for: ${missing.join(', ')}\n\nClick "Manual Column Mapping" to specify columns manually.`);
+                return;
+            }
+
+            // Parse all data rows first
+            const allRecords = [];
+            dataLines.forEach((line, index) => {
+                const fields = parseCSVLine(line);
+                
+                if (fields.length <= Math.max(nameCol, candidateCol, dateCol, amountCol)) {
+                    return; // Skip malformed rows
+                }
+
+                const donorName = fields[nameCol]?.trim().replace(/"/g, '');
+                const candidateName = fields[candidateCol]?.trim();
+                const date = fields[dateCol]?.trim().split(' ')[0]; // Remove timestamp
+                const amount = fields[amountCol]?.replace(/[^0-9.-]/g, '');
+                const parsedAmount = parseFloat(amount);
+                const entityType = entityTypeCol !== -1 ? fields[entityTypeCol]?.trim() : '';
+                const transactionId = transactionIdCol !== -1 ? fields[transactionIdCol]?.trim() : '';
+                
+                // Extract optional fields
+                const employer = employerCol !== -1 ? fields[employerCol]?.trim() : '';
+                const occupation = occupationCol !== -1 ? fields[occupationCol]?.trim() : '';
+                const city = cityCol !== -1 ? fields[cityCol]?.trim() : '';
+                const state = stateCol !== -1 ? fields[stateCol]?.trim() : '';
+
+                if (!donorName || !candidateName || !date || isNaN(parsedAmount) || parsedAmount <= 0) {
+                    return; // Skip invalid rows
+                }
+
+                allRecords.push({
+                    donorName,
+                    candidateName,
+                    contributionDate: date,
+                    amount: parsedAmount,
+                    entityType,
+                    transactionId,
+                    employer,
+                    occupation,
+                    city,
+                    state
+                });
+            });
+
+            // Process based on import mode
+            let parsedData = [];
+            let errors = [];
+
+            if (importMode === 'individuals') {
+                // Only import individual donors
+                parsedData = allRecords.filter(r => r.entityType === 'IND' || !r.entityType);
+                
+            } else if (importMode === 'smart' && entityTypeCol !== -1 && transactionIdCol !== -1) {
+                // Smart merge: combine earmarked contributions
+                const transactionGroups = {};
+                
+                // Group by base transaction ID
+                allRecords.forEach(record => {
+                    const baseId = record.transactionId.replace(/E$/, ''); // Remove 'E' suffix if present
+                    if (!transactionGroups[baseId]) {
+                        transactionGroups[baseId] = [];
+                    }
+                    transactionGroups[baseId].push(record);
+                });
+
+                // For each group, create one merged record
+                Object.values(transactionGroups).forEach(group => {
+                    if (group.length === 0) return;
+                    
+                    // Find the individual record (has the real donor name)
+                    const individualRecord = group.find(r => r.entityType === 'IND');
+                    // Find the conduit record (has the processing date)
+                    const conduitRecord = group.find(r => r.entityType === 'PAC' || r.entityType === 'PTY');
+                    
+                    if (individualRecord) {
+                        // Use individual's name, amount, and details; conduit's date if available
+                        parsedData.push({
+                            donorName: individualRecord.donorName,
+                            candidateName: individualRecord.candidateName,
+                            contributionDate: conduitRecord ? conduitRecord.contributionDate : individualRecord.contributionDate,
+                            amount: individualRecord.amount,
+                            employer: individualRecord.employer,
+                            occupation: individualRecord.occupation,
+                            city: individualRecord.city,
+                            state: individualRecord.state
+                        });
+                    } else if (group.length === 1) {
+                        // Single record with no pair - just use it
+                        const record = group[0];
+                        parsedData.push({
+                            donorName: record.donorName,
+                            candidateName: record.candidateName,
+                            contributionDate: record.contributionDate,
+                            amount: record.amount,
+                            employer: record.employer,
+                            occupation: record.occupation,
+                            city: record.city,
+                            state: record.state
+                        });
+                    }
+                });
+                
+            } else {
+                // Import all records
+                parsedData = allRecords.map(r => ({
+                    donorName: r.donorName,
+                    candidateName: r.candidateName,
+                    contributionDate: r.contributionDate,
+                    amount: r.amount,
+                    employer: r.employer,
+                    occupation: r.occupation,
+                    city: r.city,
+                    state: r.state
+                }));
+            }
+
+            // Show preview
+            pendingImportData = parsedData;
+            
+            let modeDescription = '';
+            if (importMode === 'individuals') {
+                modeDescription = 'Individual donors only';
+            } else if (importMode === 'smart') {
+                modeDescription = 'Smart merge (earmarked contributions combined)';
+            } else {
+                modeDescription = 'All records';
+            }
+            
+            showImportPreview(parsedData, errors, {
+                nameCol: headers[nameCol],
+                candidateCol: headers[candidateCol],
+                dateCol: headers[dateCol],
+                amountCol: headers[amountCol]
+            }, modeDescription);
+        }
+
+        function showManualMapper() {
+            const bulkData = document.getElementById('bulkData').value.trim();
+            if (!bulkData) {
+                alert('Please paste CSV data first');
+                return;
+            }
+
+            const lines = bulkData.split('\n').filter(line => line.trim());
+            if (lines.length < 1) {
+                alert('Please paste CSV data with headers');
+                return;
+            }
+
+            // Parse headers
+            function parseCSVLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
+
+            const headers = parseCSVLine(lines[0]);
+            currentHeaders = headers.map(h => h.toLowerCase());
+
+            const mapperDiv = document.getElementById('manualMapper');
+            const contentDiv = document.getElementById('mapperContent');
+
+            let html = `
+                <div style="display: grid; gap: 15px;">
+                    <div class="form-group">
+                        <label>Donor/Contributor Name Column</label>
+                        <select id="mapDonor" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${h}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Candidate/Committee Name Column</label>
+                        <select id="mapCandidate" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${h}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Contribution Date Column</label>
+                        <select id="mapDate" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${h}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Contribution Amount Column</label>
+                        <select id="mapAmount" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${h}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="saveMapping" style="width: auto;">
+                            <span style="font-size: 13px; font-weight: normal;">Remember this mapping for future imports</span>
+                        </label>
+                    </div>
+                </div>
+            `;
+
+            contentDiv.innerHTML = html;
+            mapperDiv.style.display = 'block';
+        }
+
+        function applyManualMapping() {
+            const donorCol = parseInt(document.getElementById('mapDonor').value);
+            const candidateCol = parseInt(document.getElementById('mapCandidate').value);
+            const dateCol = parseInt(document.getElementById('mapDate').value);
+            const amountCol = parseInt(document.getElementById('mapAmount').value);
+
+            if (isNaN(donorCol) || isNaN(candidateCol) || isNaN(dateCol) || isNaN(amountCol)) {
+                alert('Please select all required columns');
+                return;
+            }
+
+            // Get import mode
+            const importMode = document.querySelector('input[name="importMode"]:checked')?.value || 'smart';
+
+            // Save mapping if requested
+            if (document.getElementById('saveMapping').checked) {
+                const bulkData = document.getElementById('bulkData').value.trim();
+                const lines = bulkData.split('\n').filter(line => line.trim());
+                
+                function parseCSVLine(line) {
+                    const result = [];
+                    let current = '';
+                    let inQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            result.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    result.push(current.trim());
+                    return result;
+                }
+                
+                const headers = parseCSVLine(lines[0]);
+                savedColumnMapping = {
+                    donor: headers[donorCol],
+                    candidate: headers[candidateCol],
+                    date: headers[dateCol],
+                    amount: headers[amountCol]
+                };
+            }
+
+            // Parse data using manual mapping
+            const bulkData = document.getElementById('bulkData').value.trim();
+            const lines = bulkData.split('\n').filter(line => line.trim());
+            const dataLines = lines.slice(1);
+
+            function parseCSVLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
+
+            const headers = parseCSVLine(lines[0]);
+            
+            // Find entity_type and transaction_id for smart merge, plus optional fields
+            const headersLower = headers.map(h => h.toLowerCase());
+            const entityTypeCol = headersLower.indexOf('entity_type');
+            const transactionIdCol = headersLower.indexOf('transaction_id');
+            
+            // Find optional fields
+            const employerPatterns = ['contributor_employer', 'employer'];
+            const occupationPatterns = ['contributor_occupation', 'occupation'];
+            const cityPatterns = ['contributor_city', 'city'];
+            const statePatterns = ['contributor_state', 'state'];
+            
+            function findOptionalColumn(patterns) {
+                for (const pattern of patterns) {
+                    const index = headersLower.findIndex(h => h.includes(pattern) || pattern.includes(h));
+                    if (index !== -1) return index;
+                }
+                return -1;
+            }
+            
+            const employerCol = findOptionalColumn(employerPatterns);
+            const occupationCol = findOptionalColumn(occupationPatterns);
+            const cityCol = findOptionalColumn(cityPatterns);
+            const stateCol = findOptionalColumn(statePatterns);
+
+            // Parse all records first
+            const allRecords = [];
+            dataLines.forEach((line, index) => {
+                const fields = parseCSVLine(line);
+                
+                if (fields.length <= Math.max(donorCol, candidateCol, dateCol, amountCol)) {
+                    return;
+                }
+
+                const donorName = fields[donorCol]?.trim().replace(/"/g, '');
+                const candidateName = fields[candidateCol]?.trim();
+                const date = fields[dateCol]?.trim().split(' ')[0];
+                const amount = fields[amountCol]?.replace(/[^0-9.-]/g, '');
+                const parsedAmount = parseFloat(amount);
+                const entityType = entityTypeCol !== -1 ? fields[entityTypeCol]?.trim() : '';
+                const transactionId = transactionIdCol !== -1 ? fields[transactionIdCol]?.trim() : '';
+                
+                const employer = employerCol !== -1 ? fields[employerCol]?.trim() : '';
+                const occupation = occupationCol !== -1 ? fields[occupationCol]?.trim() : '';
+                const city = cityCol !== -1 ? fields[cityCol]?.trim() : '';
+                const state = stateCol !== -1 ? fields[stateCol]?.trim() : '';
+
+                if (!donorName || !candidateName || !date || isNaN(parsedAmount) || parsedAmount <= 0) {
+                    return;
+                }
+
+                allRecords.push({
+                    donorName,
+                    candidateName,
+                    contributionDate: date,
+                    amount: parsedAmount,
+                    entityType,
+                    transactionId,
+                    employer,
+                    occupation,
+                    city,
+                    state
+                });
+            });
+
+            // Process based on import mode
+            let parsedData = [];
+            const errors = [];
+
+            if (importMode === 'individuals') {
+                parsedData = allRecords.filter(r => r.entityType === 'IND' || !r.entityType);
+                
+            } else if (importMode === 'smart' && entityTypeCol !== -1 && transactionIdCol !== -1) {
+                // Smart merge
+                const transactionGroups = {};
+                
+                allRecords.forEach(record => {
+                    const baseId = record.transactionId.replace(/E$/, '');
+                    if (!transactionGroups[baseId]) {
+                        transactionGroups[baseId] = [];
+                    }
+                    transactionGroups[baseId].push(record);
+                });
+
+                Object.values(transactionGroups).forEach(group => {
+                    if (group.length === 0) return;
+                    
+                    const individualRecord = group.find(r => r.entityType === 'IND');
+                    const conduitRecord = group.find(r => r.entityType === 'PAC' || r.entityType === 'PTY');
+                    
+                    if (individualRecord) {
+                        parsedData.push({
+                            donorName: individualRecord.donorName,
+                            candidateName: individualRecord.candidateName,
+                            contributionDate: conduitRecord ? conduitRecord.contributionDate : individualRecord.contributionDate,
+                            amount: individualRecord.amount,
+                            employer: individualRecord.employer,
+                            occupation: individualRecord.occupation,
+                            city: individualRecord.city,
+                            state: individualRecord.state
+                        });
+                    } else if (group.length === 1) {
+                        const record = group[0];
+                        parsedData.push({
+                            donorName: record.donorName,
+                            candidateName: record.candidateName,
+                            contributionDate: record.contributionDate,
+                            amount: record.amount,
+                            employer: record.employer,
+                            occupation: record.occupation,
+                            city: record.city,
+                            state: record.state
+                        });
+                    }
+                });
+                
+            } else {
+                parsedData = allRecords.map(r => ({
+                    donorName: r.donorName,
+                    candidateName: r.candidateName,
+                    contributionDate: r.contributionDate,
+                    amount: r.amount,
+                    employer: r.employer,
+                    occupation: r.occupation,
+                    city: r.city,
+                    state: r.state
+                }));
+            }
+
+            // Hide mapper and show preview
+            document.getElementById('manualMapper').style.display = 'none';
+            pendingImportData = parsedData;
+            
+            let modeDescription = '';
+            if (importMode === 'individuals') {
+                modeDescription = 'Individual donors only';
+            } else if (importMode === 'smart') {
+                modeDescription = 'Smart merge (earmarked contributions combined)';
+            } else {
+                modeDescription = 'All records';
+            }
+            
+            showImportPreview(parsedData, errors, {
+                nameCol: headers[donorCol],
+                candidateCol: headers[candidateCol],
+                dateCol: headers[dateCol],
+                amountCol: headers[amountCol]
+            }, modeDescription);
+        }
+
+        function cancelManualMapping() {
+            document.getElementById('manualMapper').style.display = 'none';
+        }
+
+        function adjustMapping() {
+            document.getElementById('importPreview').style.display = 'none';
+            showManualMapper();
+        }
+
+        function showImportPreview(data, errors, mapping, modeDescription) {
+            const previewDiv = document.getElementById('importPreview');
+            const contentDiv = document.getElementById('previewContent');
+
+            let html = `
+                <div style="margin-bottom: 15px;">
+                    <strong>Column Mapping Detected:</strong>
+                    <div style="margin-top: 8px; font-size: 13px; color: #4a5568;">
+                        • Donor Name: <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">${mapping.nameCol}</code><br>
+                        • Candidate: <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">${mapping.candidateCol}</code><br>
+                        • Date: <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">${mapping.dateCol}</code><br>
+                        • Amount: <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">${mapping.amountCol}</code>
+                    </div>
+                </div>
+            `;
+            
+            if (modeDescription) {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 4px; font-size: 13px; color: #1e3a5f;">
+                        <strong>Import Mode:</strong> ${modeDescription}
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div style="margin-bottom: 15px;">
+                    <strong style="color: #2c5282;">✔ ${data.length} records ready to import</strong>
+            `;
+
+            if (errors.length > 0) {
+                html += `<br><strong style="color: #e53e3e;">✗ ${errors.length} errors</strong>`;
+            }
+
+            html += `</div>`;
+
+            // Show first few records as preview
+            if (data.length > 0) {
+                html += `<div style="margin-top: 10px;"><strong>Preview (first 3 records):</strong></div>`;
+                const previewCount = Math.min(3, data.length);
+                for (let i = 0; i < previewCount; i++) {
+                    const record = data[i];
+                    html += `
+                        <div style="margin-top: 8px; padding: 10px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px;">
+                            <strong>${record.donorName}</strong> → ${record.candidateName}<br>
+                            ${record.contributionDate} • $${record.amount.toLocaleString('en-US', {minimumFractionDigits: 2})}
+                            ${record.employer || record.occupation ? `<br><span style="color: #718096; font-size: 12px;">${record.occupation || ''}${record.occupation && record.employer ? ' at ' : ''}${record.employer || ''}</span>` : ''}
+                            ${record.city || record.state ? `<br><span style="color: #718096; font-size: 12px;">${record.city || ''}${record.city && record.state ? ', ' : ''}${record.state || ''}</span>` : ''}
+                        </div>
+                    `;
+                }
+            }
+
+            // Show errors if any
+            if (errors.length > 0) {
+                html += `<div style="margin-top: 15px; padding: 10px; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 4px; font-size: 12px; color: #c53030;">`;
+                html += `<strong>Errors (first 5):</strong><br>`;
+                errors.slice(0, 5).forEach(err => {
+                    html += `• ${err}<br>`;
+                });
+                if (errors.length > 5) {
+                    html += `• ... and ${errors.length - 5} more`;
+                }
+                html += `</div>`;
+            }
+
+            contentDiv.innerHTML = html;
+            previewDiv.style.display = 'block';
+        }
+
+        function confirmImport() {
+            if (!pendingImportData) return;
+
+            pendingImportData.forEach((record, index) => {
+                donorRecords.push({
+                    id: Date.now() + index,
+                    ...record
+                });
+            });
+
+            updateStats();
+            document.getElementById('bulkData').value = '';
+            document.getElementById('importPreview').style.display = 'none';
+            
+            alert(`Successfully imported ${pendingImportData.length} records!`);
+            pendingImportData = null;
+            
+            // Refresh browse view if filters were previously applied
+            if (filteredRecords.length > 0) {
+                applyFilters();
+            }
+        }
+
+        function cancelImport() {
+            pendingImportData = null;
+            document.getElementById('importPreview').style.display = 'none';
+        }
+
+        // Export all data as CSV
+        function exportData() {
+            if (donorRecords.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            // Helper function to properly escape CSV fields
+            function escapeCsvField(field) {
+                if (field === null || field === undefined) {
+                    return '';
+                }
+                const stringField = String(field);
+                // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+                if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+                    return '"' + stringField.replace(/"/g, '""') + '"';
+                }
+                return stringField;
+            }
+
+            let csv = 'Donor Name,Candidate Name,Contribution Date,Amount,Employer,Occupation,City,State\n';
+            donorRecords.forEach(record => {
+                csv += `${escapeCsvField(record.donorName)},${escapeCsvField(record.candidateName)},${escapeCsvField(record.contributionDate)},${escapeCsvField(record.amount)},${escapeCsvField(record.employer)},${escapeCsvField(record.occupation)},${escapeCsvField(record.city)},${escapeCsvField(record.state)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contributions.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete ALL contribution records? This cannot be undone.')) {
+                donorRecords = [];
+                filteredRecords = [];
+                updateStats();
+                document.getElementById('searchInput').value = '';
+                document.getElementById('resultsContainer').innerHTML = '<div class="no-results">Enter a name to search contribution records</div>';
+                document.getElementById('browseContainer').innerHTML = '<div class="no-results">Click "Apply Filters" to browse all contributions or apply filters</div>';
+                document.getElementById('browseCount').textContent = '0';
+                document.getElementById('browseTotal').textContent = '';
+                document.getElementById('pagination').style.display = 'none';
+            }
+        }
+
+        // Set up search event listener
+        document.getElementById('searchInput').addEventListener('input', searchDonors);
+
+        // Browse/Filter functionality
+        let filteredRecords = [];
+        let currentPageNum = 1;
+        let pageSize = 50;
+
+        function applyFilters() {
+            const committee = document.getElementById('filterCommittee').value.trim().toLowerCase();
+            const state = document.getElementById('filterState').value.trim().toUpperCase();
+            const employer = document.getElementById('filterEmployer').value.trim().toLowerCase();
+            const occupation = document.getElementById('filterOccupation').value.trim().toLowerCase();
+            const minAmount = parseFloat(document.getElementById('filterMinAmount').value) || 0;
+            const maxAmount = parseFloat(document.getElementById('filterMaxAmount').value) || Infinity;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const sortBy = document.getElementById('sortBy').value;
+            pageSize = document.getElementById('pageSize').value;
+
+            // Filter records
+            filteredRecords = donorRecords.filter(record => {
+                if (committee && !record.candidateName.toLowerCase().includes(committee)) return false;
+                if (state && record.state !== state) return false;
+                if (employer && !record.employer?.toLowerCase().includes(employer)) return false;
+                if (occupation && !record.occupation?.toLowerCase().includes(occupation)) return false;
+                if (record.amount < minAmount || record.amount > maxAmount) return false;
+                if (startDate && record.contributionDate < startDate) return false;
+                if (endDate && record.contributionDate > endDate) return false;
+                return true;
+            });
+
+            // Sort records
+            filteredRecords.sort((a, b) => {
+                switch(sortBy) {
+                    case 'date-desc':
+                        return b.contributionDate.localeCompare(a.contributionDate);
+                    case 'date-asc':
+                        return a.contributionDate.localeCompare(b.contributionDate);
+                    case 'amount-desc':
+                        return b.amount - a.amount;
+                    case 'amount-asc':
+                        return a.amount - b.amount;
+                    case 'name-asc':
+                        return a.donorName.localeCompare(b.donorName);
+                    case 'name-desc':
+                        return b.donorName.localeCompare(a.donorName);
+                    case 'committee-asc':
+                        return a.candidateName.localeCompare(b.candidateName);
+                    default:
+                        return 0;
+                }
+            });
+
+            // Calculate total amount
+            const totalAmount = filteredRecords.reduce((sum, r) => sum + r.amount, 0);
+            document.getElementById('browseTotal').textContent = `• Total: $${totalAmount.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+            currentPageNum = 1;
+            displayBrowseResults();
+        }
+
+        function displayBrowseResults() {
+            const container = document.getElementById('browseContainer');
+            
+            if (filteredRecords.length === 0) {
+                container.innerHTML = '<div class="no-results">No contributions match your filters</div>';
+                document.getElementById('pagination').style.display = 'none';
+                document.getElementById('browseCount').textContent = '0';
+                return;
+            }
+
+            document.getElementById('browseCount').textContent = filteredRecords.length.toLocaleString();
+
+            // Pagination
+            const actualPageSize = pageSize === 'all' ? filteredRecords.length : parseInt(pageSize);
+            const totalPages = Math.ceil(filteredRecords.length / actualPageSize);
+            const startIdx = (currentPageNum - 1) * actualPageSize;
+            const endIdx = Math.min(startIdx + actualPageSize, filteredRecords.length);
+            const pageRecords = filteredRecords.slice(startIdx, endIdx);
+
+            // Update pagination controls
+            if (pageSize !== 'all' && totalPages > 1) {
+                document.getElementById('pagination').style.display = 'flex';
+                document.getElementById('currentPage').textContent = currentPageNum;
+                document.getElementById('totalPages').textContent = totalPages;
+                document.getElementById('prevBtn').disabled = currentPageNum === 1;
+                document.getElementById('nextBtn').disabled = currentPageNum === totalPages;
+            } else {
+                document.getElementById('pagination').style.display = 'none';
+            }
+
+            // Display results
+            let html = '';
+            pageRecords.forEach(record => {
+                html += `
+                <div class="result-item" style="margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                        <div class="donor-name">${record.donorName}</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #2c5282;">$${record.amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                    </div>
+                    <div class="donation-info">
+                        <div class="info-item">
+                            <div class="info-label">Committee</div>
+                            <div class="info-value">${record.candidateName}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date</div>
+                            <div class="info-value">${formatDate(record.contributionDate)}</div>
+                        </div>
+                        ${record.employer ? `
+                        <div class="info-item">
+                            <div class="info-label">Employer</div>
+                            <div class="info-value">${record.employer}</div>
+                        </div>` : ''}
+                        ${record.occupation ? `
+                        <div class="info-item">
+                            <div class="info-label">Occupation</div>
+                            <div class="info-value">${record.occupation}</div>
+                        </div>` : ''}
+                        ${record.city || record.state ? `
+                        <div class="info-item">
+                            <div class="info-label">Location</div>
+                            <div class="info-value">${record.city ? record.city : ''}${record.city && record.state ? ', ' : ''}${record.state ? record.state : ''}</div>
+                        </div>` : ''}
+                        <div class="info-item">
+                            <button class="delete-btn" onclick="deleteRecord(${record.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function clearFilters() {
+            document.getElementById('filterCommittee').value = '';
+            document.getElementById('filterState').value = '';
+            document.getElementById('filterEmployer').value = '';
+            document.getElementById('filterOccupation').value = '';
+            document.getElementById('filterMinAmount').value = '';
+            document.getElementById('filterMaxAmount').value = '';
+            document.getElementById('filterStartDate').value = '';
+            document.getElementById('filterEndDate').value = '';
+            document.getElementById('sortBy').value = 'date-desc';
+            document.getElementById('browseContainer').innerHTML = '<div class="no-results">Click "Apply Filters" to browse all contributions or apply filters</div>';
+            document.getElementById('browseCount').textContent = '0';
+            document.getElementById('browseTotal').textContent = '';
+            document.getElementById('pagination').style.display = 'none';
+        }
+
+        function exportFiltered() {
+            if (filteredRecords.length === 0) {
+                alert('No filtered records to export. Please apply filters first.');
+                return;
+            }
+
+            function escapeCsvField(field) {
+                if (field === null || field === undefined) {
+                    return '';
+                }
+                const stringField = String(field);
+                if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+                    return '"' + stringField.replace(/"/g, '""') + '"';
+                }
+                return stringField;
+            }
+
+            let csv = 'Donor Name,Candidate Name,Contribution Date,Amount,Employer,Occupation,City,State\n';
+            filteredRecords.forEach(record => {
+                csv += `${escapeCsvField(record.donorName)},${escapeCsvField(record.candidateName)},${escapeCsvField(record.contributionDate)},${escapeCsvField(record.amount)},${escapeCsvField(record.employer)},${escapeCsvField(record.occupation)},${escapeCsvField(record.city)},${escapeCsvField(record.state)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'filtered-contributions.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function previousPage() {
+            if (currentPageNum > 1) {
+                currentPageNum--;
+                displayBrowseResults();
+            }
+        }
+
+        function nextPage() {
+            const actualPageSize = pageSize === 'all' ? filteredRecords.length : parseInt(pageSize);
+            const totalPages = Math.ceil(filteredRecords.length / actualPageSize);
+            if (currentPageNum < totalPages) {
+                currentPageNum++;
+                displayBrowseResults();
+            }
+        }
+
+        // Initialize with sample data
+        initializeSampleData();
+    </script>
+</body>
+</html>
