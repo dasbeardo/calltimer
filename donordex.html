@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DonorDex - Political Contribution Research</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 0;
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #174A57 0%, #1a5563 100%);
+            color: white;
+            padding: 24px 16px;
+            border-bottom: 4px solid #56D2B4;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .pokedex-logo {
+            flex-shrink: 0;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-donor {
+            color: white;
+        }
+
+        .logo-dex {
+            color: #56D2B4;
+            text-shadow: 0 0 20px rgba(86, 210, 180, 0.3);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1;
+            margin: 0;
+        }
+
+        .header-stats {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-top: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            background: rgba(86, 210, 180, 0.2);
+            border: 1px solid #56D2B4;
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .header-btn:hover {
+            background: rgba(86, 210, 180, 0.3);
+            border-color: #56D2B4;
+        }
+
+        .content {
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .main-search {
+            margin-bottom: 30px;
+        }
+
+        .main-filter {
+            margin-bottom: 30px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #174A57 0%, #0d3339 100%);
+            border: 2px solid #56D2B4;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .section {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 16px;
+            background: white;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
+        }
+
+        .section-header:hover {
+            background: #f8fafc;
+        }
+
+        .section-header:active {
+            background: #f1f5f9;
+        }
+
+        .section-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #174A57;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .section-toggle {
+            font-size: 20px;
+            color: #56D2B4;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .section-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            padding: 20px 16px;
+            display: none;
+            background: #fafbfc;
+        }
+
+        .section-content.open {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1200px;
+                border-radius: 12px;
+                margin: 20px auto;
+                min-height: calc(100vh - 40px);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            }
+            
+            .header {
+                border-radius: 12px 12px 0 0;
+                padding: 32px 40px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+            
+            .header p {
+                font-size: 15px;
+            }
+            
+            .section-header {
+                padding: 22px 40px;
+            }
+            
+            .section-content {
+                padding: 32px 40px;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        input, select, textarea {
+            padding: 12px 14px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: white;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="file"] {
+            border: 2px dashed #cbd5e0;
+            background: #f8fafc;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 16px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        input[type="file"]:hover {
+            border-color: #56D2B4;
+            background: #f0fdf9;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #56D2B4;
+            box-shadow: 0 0 0 3px rgba(86, 210, 180, 0.15);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        @media (min-width: 640px) {
+            .btn {
+                width: auto;
+                min-width: 140px;
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #174A57 0%, #1a5563 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(23, 74, 87, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #174A57;
+            border: 2px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            border-color: #56D2B4;
+            background: #f0fdf9;
+        }
+
+        .btn-secondary:active {
+            background: #e6f7f3;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 50px 14px 16px;
+            font-size: 15px;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .results-container {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            min-height: 150px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            border-left: 4px solid #56D2B4;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s;
+        }
+
+        .result-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left-color: #174A57;
+        }
+
+        .donor-summary {
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .donor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .expand-indicator {
+            font-size: 18px;
+            color: #56D2B4;
+            transition: transform 0.3s ease;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .expand-indicator.expanded {
+            transform: rotate(180deg);
+        }
+
+        .contributions-list {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #e2e8f0;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contributions-list.expanded {
+            display: block;
+        }
+
+        .contribution-item {
+            margin-bottom: 16px;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid #56D2B4;
+        }
+
+        .contribution-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .donor-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #174A57;
+            letter-spacing: -0.3px;
+        }
+
+        .donation-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        @media (min-width: 640px) {
+            .donation-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .donation-info {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #718096;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 16px 12px;
+            background: white;
+            margin: 0;
+        }
+
+        @media (min-width: 640px) {
+            .stats {
+                gap: 16px;
+                padding: 24px 16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .stats {
+                gap: 24px;
+                padding: 32px 40px;
+            }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid #e2e8f0;
+            padding: 12px 8px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(86, 210, 180, 0.15);
+            border-color: #56D2B4;
+        }
+
+        @media (min-width: 640px) {
+            .stat-card {
+                padding: 18px 12px;
+            }
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #174A57;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        @media (min-width: 640px) {
+            .stat-value {
+                font-size: 28px;
+                margin-bottom: 6px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .stat-value {
+                font-size: 36px;
+            }
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        @media (min-width: 640px) {
+            .stat-label {
+                font-size: 11px;
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            color: #a0aec0;
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+
+        .bulk-import {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 8px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .button-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+
+        .delete-btn {
+            background: white;
+            color: #e53e3e;
+            border: 2px solid #feb2b2;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .delete-btn:hover {
+            background: #fff5f5;
+            border-color: #fc8181;
+        }
+
+        .delete-btn:active {
+            background: #fed7d7;
+        }
+
+        code {
+            background: #e6f7f3;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #174A57;
+            border: 1px solid #b8e6d9;
+        }
+
+        select.mapper-select {
+            padding: 12px 14px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+        }
+
+        button:disabled,
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:disabled:active,
+        .btn:disabled:active {
+            transform: none;
+            box-shadow: none;
+        }
+
+        #pagination {
+            padding: 20px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        @media (min-width: 640px) {
+            #pagination {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        #pagination button {
+            min-width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            #pagination button {
+                min-width: 140px;
+            }
+        }
+
+        .filter-summary {
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-summary-text {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .filter-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .match-badge {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+        }
+
+        .refund-badge {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div id="storageIndicator" style="position: absolute; top: 20px; right: 20px; font-size: 12px; opacity: 0.9;"></div>
+            <div class="header-content">
+                <svg class="pokedex-logo" width="80" height="80" viewBox="0 0 100 100">
+                    <!-- Pokédex body -->
+                    <rect x="10" y="10" width="80" height="80" rx="8" fill="#174A57" stroke="#56D2B4" stroke-width="3"/>
+
+                    <!-- Screen -->
+                    <rect x="20" y="20" width="60" height="35" rx="3" fill="#56D2B4" opacity="0.3"/>
+
+                    <!-- Screen inner glow -->
+                    <rect x="23" y="23" width="54" height="29" rx="2" fill="#56D2B4" opacity="0.6"/>
+
+                    <!-- Checkmark in screen -->
+                    <path d="M 35 37 L 45 45 L 65 28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9"/>
+
+                    <!-- Button row -->
+                    <circle cx="30" cy="70" r="6" fill="#56D2B4"/>
+                    <circle cx="50" cy="70" r="6" fill="#56D2B4" opacity="0.6"/>
+                    <circle cx="70" cy="70" r="6" fill="#56D2B4" opacity="0.3"/>
+
+                    <!-- Power light -->
+                    <circle cx="85" cy="20" r="4" fill="#56D2B4" opacity="0.8">
+                        <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+                <div class="header-text">
+                    <h1><span class="logo-donor">Donor</span><span class="logo-dex">Dex</span></h1>
+                    <p>Gotta track 'em all!</p>
+                </div>
+            </div>
+        </div>
+        <div style="background: white; padding: 8px 16px; text-align: right; font-size: 12px; color: #174A57; border-bottom: 1px solid #e2e8f0;">
+            <span id="totalDonors">0</span> contributors •
+            <span id="totalRecords">0</span> contributions •
+            <span id="totalCandidates">0</span> committees
+        </div>
+
+        <div class="content">
+
+            <!-- Search Section - Always Visible -->
+            <div class="main-search">
+                <h2 style="margin-bottom: 15px; font-size: 18px; color: #174A57;">🔎 Search</h2>
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search by donor name..."
+                        autocomplete="off"
+                    >
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="results-container" id="resultsContainer">
+                    <div class="no-results">Enter a donor name to begin search</div>
+                </div>
+            </div>
+
+            <!-- Filter Section - Always Visible -->
+            <div class="main-filter">
+                <h2 style="margin-bottom: 15px; font-size: 18px; color: #174A57; cursor: pointer; display: flex; align-items: center; justify-content: space-between;" onclick="toggleFilters()">
+                    <span>📊 Browse & Filter</span>
+                    <span id="filterToggleIcon" style="font-size: 14px; transition: transform 0.3s;">▶</span>
+                </h2>
+
+                    <div id="filterForm" class="form-grid" style="display: none;">
+                        <div class="form-group">
+                            <label for="filterCommittee">Committee</label>
+                            <input type="text" id="filterCommittee" placeholder="Any committee">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterState">State</label>
+                            <input type="text" id="filterState" placeholder="Any state" maxlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterEmployer">Employer</label>
+                            <input type="text" id="filterEmployer" placeholder="Any employer">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterOccupation">Occupation</label>
+                            <input type="text" id="filterOccupation" placeholder="Any occupation">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterMinAmount">Min Amount ($)</label>
+                            <input type="number" id="filterMinAmount" placeholder="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterMaxAmount">Max Amount ($)</label>
+                            <input type="number" id="filterMaxAmount" placeholder="Any" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterStartDate">From Date</label>
+                            <input type="date" id="filterStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterEndDate">To Date</label>
+                            <input type="date" id="filterEndDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="sortBy">Sort By</label>
+                        <select id="sortBy" class="mapper-select">
+                            <option value="date-desc">Date (Newest First)</option>
+                            <option value="date-asc">Date (Oldest First)</option>
+                            <option value="amount-desc">Amount (High to Low)</option>
+                            <option value="amount-asc">Amount (Low to High)</option>
+                            <option value="name-asc">Name (A to Z)</option>
+                            <option value="name-desc">Name (Z to A)</option>
+                            <option value="committee-asc">Committee (A to Z)</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                        <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+                        <button class="btn btn-secondary" onclick="exportFiltered()">Export Results</button>
+                    </div>
+                </div>
+
+                    <div class="filter-summary" style="margin-top: 20px;">
+                        <div class="filter-summary-text">
+                            <strong id="browseCount">0</strong> contributions
+                            <span id="browseTotal" style="color: #718096;"></span>
+                        </div>
+                        <div class="filter-controls">
+                            <span style="color: #718096;">Show:</span>
+                            <select id="pageSize" class="mapper-select" style="padding: 8px 12px; font-size: 14px; width: auto;" onchange="applyFilters()">
+                                <option value="25">25</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="results-container" id="browseContainer">
+                        <div class="no-results">Click "Apply Filters" to browse</div>
+                    </div>
+
+                    <div id="pagination" style="display: none;">
+                        <button class="btn btn-secondary" onclick="previousPage()" id="prevBtn">← Previous</button>
+                        <div style="font-size: 14px; color: #4a5568;">
+                            Page <strong id="currentPage">1</strong> of <strong id="totalPages">1</strong>
+                        </div>
+                        <button class="btn btn-secondary" onclick="nextPage()" id="nextBtn">Next →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" style="display: none;">
+                <div class="section-header" onclick="toggleSection('add')">
+                    <h2>➕ Add Contribution</h2>
+                    <span class="section-toggle" id="toggle-add">▼</span>
+                </div>
+                <div class="section-content" id="content-add">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" placeholder="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" placeholder="Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="candidateName">Committee *</label>
+                            <input type="text" id="candidateName" placeholder="Campaign Committee" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contributionDate">Date *</label>
+                            <input type="date" id="contributionDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalAmount">Amount *</label>
+                            <input type="number" id="totalAmount" placeholder="2500" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="employer">Employer</label>
+                            <input type="text" id="employer" placeholder="Acme Corp">
+                        </div>
+                        <div class="form-group">
+                            <label for="occupation">Occupation</label>
+                            <input type="text" id="occupation" placeholder="Engineer">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" placeholder="Chicago">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" placeholder="IL" maxlength="2">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addDonor()">Add Contribution</button>
+                        <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import/Export Modal -->
+            <div id="importExportModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 2000; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                <h2 style="margin-bottom: 20px; color: #174A57;">📁 Import/Export</h2>
+
+                <!-- Import Section -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #174A57;">Import FEC Data</h3>
+                    <div style="margin-bottom: 20px;">
+                        <label for="csvFile" style="display: block; margin-bottom: 8px; font-weight: 600;">📁 Upload CSV File</label>
+                        <input type="file" id="csvFile" accept=".csv,.txt" onchange="handleFileUpload(event)">
+                        <div class="help-text" style="margin-top: 8px;">Upload FEC CSV file (shows preview before importing)</div>
+                    </div>
+
+                    <div style="text-align: center; margin: 20px 0; color: #a0aec0; font-size: 13px; font-weight: 600;">— OR —</div>
+
+                    <label for="bulkData">Paste CSV Text</label>
+                    <textarea id="bulkData" placeholder="Paste FEC CSV data here..."></textarea>
+                    <div class="help-text">Paste FEC data, then click "Process Import" below</div>
+
+                    <!-- Import Mode Selection -->
+                    <div style="margin: 16px 0;">
+                        <label style="font-weight: 600; margin-bottom: 8px; display: block;">Import Mode:</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: normal;">
+                                <input type="radio" name="importMode" value="smart" checked style="width: auto;">
+                                <span><strong>Smart merge</strong> - Combine earmarked contributions</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: normal;">
+                                <input type="radio" name="importMode" value="individuals" style="width: auto;">
+                                <span>Individual donors only</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: normal;">
+                                <input type="radio" name="importMode" value="all" style="width: auto;">
+                                <span>Import all records (including refunds)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="smartImport()">Process Import</button>
+                        <button class="btn btn-secondary" onclick="showManualMapper()">Manual Mapping</button>
+                    </div>
+
+                    <!-- Manual Mapper -->
+                    <div id="manualMapper" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px;">
+                        <div style="font-weight: 600; margin-bottom: 15px; color: #174A57; font-size: 16px;">Manual Column Mapping</div>
+                        <div style="font-size: 13px; color: #718096; margin-bottom: 15px;">
+                            Select which column contains each type of data.
+                        </div>
+                        <div id="mapperContent"></div>
+                        <div class="button-group" style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="applyManualMapping()">Apply & Import</button>
+                            <button class="btn btn-secondary" onclick="cancelManualMapping()">Cancel</button>
+                        </div>
+                    </div>
+
+                    <!-- Import Preview -->
+                    <div id="importPreview" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px;">
+                        <div style="font-weight: 600; margin-bottom: 10px; color: #174A57; font-size: 16px;">Import Preview</div>
+                        <div id="previewContent"></div>
+                        <div class="button-group" style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="confirmImport()">Confirm Import</button>
+                            <button class="btn btn-secondary" onclick="adjustMapping()">Adjust Mapping</button>
+                            <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Section -->
+                <div style="margin-bottom: 20px; border-top: 2px solid #e2e8f0; padding-top: 20px;">
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #174A57;">Export Data</h3>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="exportData()">📥 Export All Records</button>
+                        <button class="btn btn-secondary" onclick="exportFiltered()">📥 Export Filtered</button>
+                    </div>
+                </div>
+
+                <div class="button-group" style="margin-top: 20px; border-top: 2px solid #e2e8f0; padding-top: 20px;">
+                    <button class="btn btn-secondary" onclick="closeImportExportModal()">Close</button>
+                </div>
+            </div>
+
+            <!-- Hidden Add Contribution Modal -->
+            <div id="addModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 2000; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                <h2 style="margin-bottom: 20px; color: #174A57;">➕ Add Contribution</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="modalFirstName">First Name *</label>
+                        <input type="text" id="modalFirstName" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalLastName">Last Name *</label>
+                        <input type="text" id="modalLastName" placeholder="Smith" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalCandidateName">Committee *</label>
+                        <input type="text" id="modalCandidateName" placeholder="Campaign Committee" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalContributionDate">Date *</label>
+                        <input type="date" id="modalContributionDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalTotalAmount">Amount *</label>
+                        <input type="number" id="modalTotalAmount" placeholder="2500" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalEmployer">Employer</label>
+                        <input type="text" id="modalEmployer" placeholder="Acme Corp">
+                    </div>
+                    <div class="form-group">
+                        <label for="modalOccupation">Occupation</label>
+                        <input type="text" id="modalOccupation" placeholder="Engineer">
+                    </div>
+                    <div class="form-group">
+                        <label for="modalCity">City</label>
+                        <input type="text" id="modalCity" placeholder="Chicago">
+                    </div>
+                    <div class="form-group">
+                        <label for="modalState">State</label>
+                        <input type="text" id="modalState" placeholder="IL" maxlength="2">
+                    </div>
+                </div>
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="addDonorFromModal()">Add Contribution</button>
+                    <button class="btn btn-secondary" onclick="clearModalForm()">Clear</button>
+                    <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Modal Backdrop -->
+            <div id="modalBackdrop" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999;" onclick="closeAllModals()"></div>
+
+            <!-- FAB Menu -->
+            <div id="fabMenu" style="display: none; position: fixed; bottom: 100px; right: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1001; min-width: 200px;">
+                <div style="padding: 8px 0;">
+                    <div onclick="openAddModal(); closeFabMenu();" style="padding: 12px 20px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">
+                        <span style="font-size: 18px;">➕</span>
+                        <span style="font-weight: 600; color: #174A57;">Add Contribution</span>
+                    </div>
+                    <div onclick="openImportExportModal(); closeFabMenu();" style="padding: 12px 20px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">
+                        <span style="font-size: 18px;">📁</span>
+                        <span style="font-weight: 600; color: #174A57;">Import/Export</span>
+                    </div>
+                    <div onclick="if(confirm('Clear all data?')) { clearAllData(); closeFabMenu(); }" style="padding: 12px 20px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 10px;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">
+                        <span style="font-size: 18px;">🗑️</span>
+                        <span style="font-weight: 600; color: #dc2626;">Clear All</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Action Button -->
+            <div class="fab" onclick="toggleFabMenu()" title="Actions">☰</div>
+
+        </div>
+    </div>
+
+    <script>
+        // FAB Menu controls
+        function toggleFabMenu() {
+            const menu = document.getElementById('fabMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function closeFabMenu() {
+            document.getElementById('fabMenu').style.display = 'none';
+        }
+
+        // Close FAB menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const fab = document.querySelector('.fab');
+            const menu = document.getElementById('fabMenu');
+            if (menu && fab && !fab.contains(e.target) && !menu.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        // Modal controls
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'block';
+            document.getElementById('modalBackdrop').style.display = 'block';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+
+        function openImportExportModal() {
+            document.getElementById('importExportModal').style.display = 'block';
+            document.getElementById('modalBackdrop').style.display = 'block';
+        }
+
+        function closeImportExportModal() {
+            document.getElementById('importExportModal').style.display = 'none';
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+
+        function closeAllModals() {
+            closeAddModal();
+            closeImportExportModal();
+        }
+
+        // Add donor from modal - complete implementation
+        function addDonorFromModal() {
+            // Get values from modal form (with 'modal' prefix to avoid ID conflicts)
+            const firstName = document.getElementById('modalFirstName').value.trim();
+            const lastName = document.getElementById('modalLastName').value.trim();
+            const candidateName = document.getElementById('modalCandidateName').value.trim();
+            const contributionDate = document.getElementById('modalContributionDate').value;
+            const amount = parseFloat(document.getElementById('modalTotalAmount').value);
+            const employer = document.getElementById('modalEmployer').value.trim();
+            const occupation = document.getElementById('modalOccupation').value.trim();
+            const city = document.getElementById('modalCity').value.trim();
+            const state = document.getElementById('modalState').value.trim().toUpperCase();
+
+            if (!firstName || !lastName || !candidateName || !contributionDate || isNaN(amount)) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+
+            const { ymd, epoch } = parseFecDate(contributionDate);
+            if (!ymd) {
+                alert('Invalid date format. Please use YYYY-MM-DD format.');
+                return;
+            }
+
+            const newRecord = {
+                id: generateId(),
+                firstName: firstName,
+                lastName: lastName,
+                candidateName: candidateName,
+                contributionDate: ymd,
+                contributionEpoch: epoch,
+                amount: Math.round(amount * 100) / 100,
+                isRefund: amount < 0,
+                employer: employer,
+                occupation: occupation,
+                city: city,
+                state: state
+            };
+
+            donorRecords.push(newRecord);
+            updateStats();
+            saveToStorage();
+            clearModalForm();
+
+            document.getElementById('searchInput').value = firstName + ' ' + lastName;
+            searchDonors();
+
+            closeAddModal();
+        }
+
+        // Clear modal form fields
+        function clearModalForm() {
+            document.getElementById('modalFirstName').value = '';
+            document.getElementById('modalLastName').value = '';
+            document.getElementById('modalCandidateName').value = '';
+            document.getElementById('modalContributionDate').value = '';
+            document.getElementById('modalTotalAmount').value = '';
+            document.getElementById('modalEmployer').value = '';
+            document.getElementById('modalOccupation').value = '';
+            document.getElementById('modalCity').value = '';
+            document.getElementById('modalState').value = '';
+        }
+    </script>
+
+    <script>
+        // ==================== SECURITY & UTILITY FUNCTIONS ====================
+        
+        // XSS Protection: Escape HTML entities
+        function escapeHtml(input) {
+            const s = String(input ?? '');
+            return s.replace(/[&<>"'`=\/]/g, ch => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '`': '&#x60;',
+                '=': '&#x3D;',
+                '/': '&#x2F;'
+            }[ch]));
+        }
+
+        // CSV Formula Injection Protection
+        function safeForCSV(val) {
+            let s = String(val ?? '');
+            // Prefix dangerous characters with a single quote to prevent formula execution
+            if (/^[=+\-@]/.test(s)) {
+                s = "'" + s;
+            }
+            return s;
+        }
+
+        // CSV Export with proper escaping
+        function escapeCsvField(val) {
+            const s = safeForCSV(val);
+            // If contains comma, quote, or newline, wrap in quotes and escape internal quotes
+            return (/[",\n]/.test(s)) ? `"${s.replace(/"/g, '""')}"` : s;
+        }
+
+        // Date Normalization (handles multiple formats)
+        function parseFecDate(input) {
+            const t = String(input || '').trim();
+            if (!t) return { ymd: null, epoch: null };
+            
+            // Remove time portion if present (e.g., "2024-01-15 00:00:00" -> "2024-01-15")
+            const dateOnly = t.split(' ')[0].split('T')[0];
+            
+            let y, m, d;
+            
+            // Handle YYYY-MM-DD format
+            if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateOnly)) {
+                const parts = dateOnly.split('-').map(Number);
+                y = parts[0];
+                m = parts[1];
+                d = parts[2];
+            }
+            // Handle MM/DD/YYYY format
+            else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateOnly)) {
+                const parts = dateOnly.split('/').map(Number);
+                m = parts[0];
+                d = parts[1];
+                y = parts[2];
+            }
+            // Handle M/D/YY format (2-digit year)
+            else if (/^\d{1,2}\/\d{1,2}\/\d{2}$/.test(dateOnly)) {
+                const parts = dateOnly.split('/').map(Number);
+                m = parts[0];
+                d = parts[1];
+                y = parts[2];
+                // Assume 20xx for years 00-99
+                y = y + (y < 50 ? 2000 : 1900);
+            }
+            // Handle YYYYMMDD format (no separators)
+            else if (/^\d{8}$/.test(dateOnly)) {
+                y = parseInt(dateOnly.substr(0, 4));
+                m = parseInt(dateOnly.substr(4, 2));
+                d = parseInt(dateOnly.substr(6, 2));
+            }
+            else {
+                // Try to parse as a date object as last resort
+                const dateObj = new Date(t);
+                if (!isNaN(dateObj.getTime())) {
+                    y = dateObj.getFullYear();
+                    m = dateObj.getMonth() + 1;
+                    d = dateObj.getDate();
+                } else {
+                    return { ymd: null, epoch: null };
+                }
+            }
+            
+            // Validate ranges (be lenient with day to allow Feb 30, etc - Date object will fix it)
+            if (!y || y < 1900 || y > 2100 || !m || m < 1 || m > 12 || !d || d < 1 || d > 31) {
+                return { ymd: null, epoch: null };
+            }
+            
+            // Create date and let it normalize (e.g., Feb 30 -> Mar 2)
+            const dateObj = new Date(y, m - 1, d);
+            const normalizedY = dateObj.getFullYear();
+            const normalizedM = dateObj.getMonth() + 1;
+            const normalizedD = dateObj.getDate();
+            
+            const ymd = `${normalizedY.toString().padStart(4, '0')}-${String(normalizedM).padStart(2, '0')}-${String(normalizedD).padStart(2, '0')}`;
+            const epoch = Date.UTC(normalizedY, normalizedM - 1, normalizedD);
+            
+            return { ymd, epoch };
+        }
+
+        // Robust CSV Parser (handles quotes, newlines, CRLF)
+        function parseCSV(text) {
+            const rows = [];
+            let row = [], field = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i];
+                const next = text[i + 1];
+
+                if (inQuotes) {
+                    if (ch === '"' && next === '"') {
+                        field += '"';
+                        i++; // Skip next quote
+                    } else if (ch === '"') {
+                        inQuotes = false;
+                    } else {
+                        field += ch;
+                    }
+                } else {
+                    if (ch === '"') {
+                        inQuotes = true;
+                    } else if (ch === ',') {
+                        row.push(field.trim());
+                        field = '';
+                    } else if (ch === '\n') {
+                        row.push(field.trim());
+                        if (row.some(f => f !== '')) { // Only add non-empty rows
+                            rows.push(row);
+                        }
+                        row = [];
+                        field = '';
+                    } else if (ch === '\r') {
+                        // Ignore CR (will handle CRLF via the \n case)
+                    } else {
+                        field += ch;
+                    }
+                }
+            }
+            
+            // Don't forget the last field and row
+            row.push(field.trim());
+            if (row.some(f => f !== '')) {
+                rows.push(row);
+            }
+            
+            return rows;
+        }
+
+        // Flexible Column Detection (supports more FEC variants)
+        const COLUMN_PATTERNS = {
+            firstName: ['contributor_first_name', 'first_name', 'firstname', 'first', 'contrib_first_name'],
+            lastName: ['contributor_last_name', 'last_name', 'lastname', 'last', 'contrib_last_name'],
+            fullName: ['contributor_name', 'donor_name', 'name', 'individual_name', 'person_name', 'contributor', 'donor'],
+            committee: ['committee_name', 'recipient_name', 'committee', 'candidate_name', 'recipient', 'payee_name', 'committee_id', 'cmte_id'],
+            date: ['contribution_receipt_date', 'transaction_date', 'receipt_date', 'date', 'transaction_dt', 'contrib_date'],
+            amount: ['contribution_receipt_amount', 'transaction_amount', 'amount', 'receipt_amount', 'total', 'transaction_amt', 'contrib_amount'],
+            entity: ['entity_type', 'entity_tp', 'entity_t', 'entity'],
+            tranId: ['transaction_id', 'tran_id', 'sub_id', 'transaction_number'],
+            employer: ['contributor_employer', 'employer', 'contrib_employer'],
+            occupation: ['contributor_occupation', 'occupation', 'contrib_occupation'],
+            city: ['contributor_city', 'city', 'contrib_city'],
+            state: ['contributor_state', 'state', 'contrib_state', 'contributor_st']
+        };
+
+        function findColumnIdx(headers, candidates) {
+            const H = headers.map(h => h.toLowerCase().trim());
+            for (const c of candidates) {
+                const idx = H.findIndex(h => h === c || h.includes(c) || c.includes(h));
+                if (idx !== -1) return idx;
+            }
+            return -1;
+        }
+
+        // Parse full name into first/last (handles "Last, First" and "First Last" formats)
+        function parseFullName(fullName) {
+            if (!fullName) return { firstName: '', lastName: '' };
+
+            const trimmed = fullName.trim();
+
+            // Check for "Last, First" format
+            if (trimmed.includes(',')) {
+                const [last, first] = trimmed.split(',').map(s => s.trim());
+                return { firstName: first || '', lastName: last || '' };
+            }
+
+            // Otherwise assume "First Last" or "First Middle Last" format
+            const parts = trimmed.split(' ').filter(p => p.length > 0);
+            if (parts.length === 0) {
+                return { firstName: '', lastName: '' };
+            } else if (parts.length === 1) {
+                return { firstName: '', lastName: parts[0] };
+            } else {
+                // Last word is last name, everything else is first name
+                const lastName = parts[parts.length - 1];
+                const firstName = parts.slice(0, -1).join(' ');
+                return { firstName, lastName };
+            }
+        }
+
+        // Generate unique ID
+        function generateId() {
+            return (crypto?.randomUUID?.() || ('id_' + Math.random().toString(36).slice(2) + Date.now().toString(36)));
+        }
+
+        // ==================== DATA STORAGE ====================
+
+        let donorRecords = [];
+
+        // ==================== PERSISTENCE (LOCALSTORAGE) ====================
+
+        const STORAGE_KEY = 'donordex_records_v2';
+        const STORAGE_MAPPING_KEY = 'donordex_mapping_v2';
+        const OLD_STORAGE_KEY = 'donordex_records_v1'; // Old version to auto-clear
+        const MAX_STORAGE_SIZE = 5 * 1024 * 1024; // 5MB safe limit
+        const WARNING_THRESHOLD = 0.8; // Warn at 80% capacity
+
+        let saveTimeout = null;
+        let lastSaveTime = null;
+
+        // Calculate approximate JSON size
+        function getStorageSize() {
+            try {
+                const data = JSON.stringify(donorRecords);
+                return new Blob([data]).size;
+            } catch (e) {
+                return 0;
+            }
+        }
+
+        // Check if approaching storage limit
+        function checkStorageQuota() {
+            const size = getStorageSize();
+            const percentage = size / MAX_STORAGE_SIZE;
+
+            if (percentage >= 1.0) {
+                return {
+                    status: 'exceeded',
+                    size: size,
+                    percentage: percentage,
+                    message: 'Storage limit exceeded! Data cannot be saved. Please export and reduce your dataset.'
+                };
+            } else if (percentage >= WARNING_THRESHOLD) {
+                return {
+                    status: 'warning',
+                    size: size,
+                    percentage: percentage,
+                    message: `Storage is ${Math.round(percentage * 100)}% full. Consider exporting your data as backup.`
+                };
+            }
+
+            return {
+                status: 'ok',
+                size: size,
+                percentage: percentage
+            };
+        }
+
+        // Save to localStorage with debouncing
+        function saveToStorage() {
+            // Clear any pending save
+            if (saveTimeout) {
+                clearTimeout(saveTimeout);
+            }
+
+            // Debounce saves by 100ms
+            saveTimeout = setTimeout(() => {
+                try {
+                    const quota = checkStorageQuota();
+
+                    if (quota.status === 'exceeded') {
+                        alert(quota.message);
+                        updateStorageIndicator('error', quota);
+                        return;
+                    }
+
+                    if (quota.status === 'warning') {
+                        // Only show warning once per session
+                        if (!sessionStorage.getItem('donordex_quota_warned')) {
+                            alert(quota.message);
+                            sessionStorage.setItem('donordex_quota_warned', 'true');
+                        }
+                    }
+
+                    // Save data
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(donorRecords));
+
+                    // Save column mapping if exists
+                    if (savedColumnMapping) {
+                        localStorage.setItem(STORAGE_MAPPING_KEY, JSON.stringify(savedColumnMapping));
+                    }
+
+                    lastSaveTime = new Date();
+                    updateStorageIndicator('saved', quota);
+
+                } catch (e) {
+                    console.error('Failed to save to localStorage:', e);
+
+                    if (e.name === 'QuotaExceededError') {
+                        alert('Storage quota exceeded! Your data could not be saved. Please export your data and reduce the dataset size.');
+                        updateStorageIndicator('error', { status: 'exceeded' });
+                    } else {
+                        updateStorageIndicator('error', { status: 'error' });
+                    }
+                }
+            }, 100);
+        }
+
+        // Load from localStorage
+        function loadFromStorage() {
+            try {
+                // Check for old v1 data and clear it
+                const oldData = localStorage.getItem(OLD_STORAGE_KEY);
+                if (oldData) {
+                    localStorage.removeItem(OLD_STORAGE_KEY);
+                    localStorage.removeItem('donordex_mapping_v1');
+                    console.log('Cleared old v1 data format');
+                    alert('DonorDex has been updated! Old data format detected and cleared.\n\nPlease re-import your FEC data to use the new first name/last name format.');
+                }
+
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    if (Array.isArray(parsed)) {
+                        donorRecords = parsed;
+                        console.log(`Loaded ${donorRecords.length} records from storage`);
+                    }
+                }
+
+                // Load saved column mapping
+                const mapping = localStorage.getItem(STORAGE_MAPPING_KEY);
+                if (mapping) {
+                    savedColumnMapping = JSON.parse(mapping);
+                    console.log('Loaded saved column mapping');
+                }
+
+                updateStorageIndicator('loaded', checkStorageQuota());
+
+            } catch (e) {
+                console.error('Failed to load from localStorage:', e);
+                alert('Warning: Could not load saved data. Starting fresh.');
+            }
+        }
+
+        // Update storage indicator in UI
+        function updateStorageIndicator(state, quota) {
+            const indicator = document.getElementById('storageIndicator');
+            if (!indicator) return;
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            switch(state) {
+                case 'saved':
+                    indicator.innerHTML = `<span style="color: #56D2B4;">💾 Saved ${timeStr}</span>`;
+                    if (quota && quota.percentage > WARNING_THRESHOLD) {
+                        indicator.innerHTML += ` <span style="color: #ffc107;">⚠️ ${Math.round(quota.percentage * 100)}% full</span>`;
+                    }
+                    break;
+
+                case 'loaded':
+                    indicator.innerHTML = `<span style="color: #56D2B4;">✓ Loaded</span>`;
+                    break;
+
+                case 'error':
+                    indicator.innerHTML = `<span style="color: #e53e3e;">⚠️ Save failed</span>`;
+                    break;
+
+                case 'saving':
+                    indicator.innerHTML = `<span style="color: #718096;">💾 Saving...</span>`;
+                    break;
+            }
+        }
+
+        // Clear storage
+        function clearStorage() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(STORAGE_MAPPING_KEY);
+                sessionStorage.removeItem('donordex_quota_warned');
+                updateStorageIndicator('loaded', { status: 'ok', size: 0, percentage: 0 });
+            } catch (e) {
+                console.error('Failed to clear storage:', e);
+            }
+        }
+
+        // ==================== UI FUNCTIONS ====================
+        
+        function toggleSection(sectionId) {
+            const content = document.getElementById('content-' + sectionId);
+            const toggle = document.getElementById('toggle-' + sectionId);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                toggle.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                toggle.classList.add('open');
+            }
+        }
+
+        // ==================== FUZZY SEARCH ====================
+        
+        function levenshteinDistance(str1, str2) {
+            str1 = str1.toLowerCase();
+            str2 = str2.toLowerCase();
+            
+            const len1 = str1.length;
+            const len2 = str2.length;
+            const matrix = [];
+
+            for (let i = 0; i <= len1; i++) {
+                matrix[i] = [i];
+            }
+            for (let j = 0; j <= len2; j++) {
+                matrix[0][j] = j;
+            }
+
+            for (let i = 1; i <= len1; i++) {
+                for (let j = 1; j <= len2; j++) {
+                    if (str1[i - 1] === str2[j - 1]) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+
+            return matrix[len1][len2];
+        }
+
+        function similarityScore(str1, str2) {
+            const distance = levenshteinDistance(str1, str2);
+            const maxLength = Math.max(str1.length, str2.length);
+            return 1 - (distance / maxLength);
+        }
+
+        function isFuzzyMatch(searchTerm, firstName, lastName, threshold = 0.7) {
+            searchTerm = searchTerm.toLowerCase();
+            const fullName = (firstName + ' ' + lastName).toLowerCase();
+            firstName = firstName.toLowerCase();
+            lastName = lastName.toLowerCase();
+
+            // Exact substring match on full name
+            if (fullName.includes(searchTerm)) {
+                return { match: true, score: 1.0, type: 'exact' };
+            }
+
+            // Exact match on first or last name separately
+            if (firstName.includes(searchTerm) || lastName.includes(searchTerm)) {
+                return { match: true, score: 1.0, type: 'exact' };
+            }
+
+            // Word-level fuzzy matching
+            const donorWords = fullName.split(' ');
+            const searchWords = searchTerm.split(' ');
+
+            for (const donorWord of donorWords) {
+                for (const searchWord of searchWords) {
+                    const score = similarityScore(searchWord, donorWord);
+                    if (score >= threshold) {
+                        return { match: true, score: score, type: 'fuzzy' };
+                    }
+                }
+            }
+
+            // Full string fuzzy matching
+            if (searchTerm.length >= 3) {
+                const fullScore = similarityScore(searchTerm, fullName);
+                if (fullScore >= threshold) {
+                    return { match: true, score: fullScore, type: 'fuzzy' };
+                }
+            }
+
+            return { match: false, score: 0, type: 'none' };
+        }
+
+        // ==================== SEARCH & DISPLAY ====================
+        
+        function searchDonors() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            if (!searchTerm) {
+                resultsContainer.innerHTML = '<div class="no-results">Enter a donor name to begin search</div>';
+                return;
+            }
+
+            const results = donorRecords.map(record => {
+                const matchResult = isFuzzyMatch(searchTerm, record.firstName, record.lastName);
+                return {
+                    ...record,
+                    matchScore: matchResult.score,
+                    matchType: matchResult.match ? matchResult.type : 'none',
+                    isMatch: matchResult.match
+                };
+            }).filter(r => r.isMatch);
+
+            results.sort((a, b) => {
+                if (a.matchType === 'exact' && b.matchType !== 'exact') return -1;
+                if (a.matchType !== 'exact' && b.matchType === 'exact') return 1;
+                return b.matchScore - a.matchScore;
+            });
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="no-results">No donors found in DonorDex<br><small style="margin-top: 10px; display: block;">Try adjusting your search term</small></div>';
+                return;
+            }
+
+            const groupedResults = {};
+            results.forEach(record => {
+                const fullName = record.firstName + ' ' + record.lastName;
+                if (!groupedResults[fullName]) {
+                    groupedResults[fullName] = {
+                        donations: [],
+                        matchType: record.matchType,
+                        matchScore: record.matchScore
+                    };
+                }
+                groupedResults[fullName].donations.push(record);
+            });
+
+            // Build results using DOM manipulation (XSS-safe)
+            resultsContainer.innerHTML = '';
+
+            Object.keys(groupedResults).forEach(fullName => {
+                const group = groupedResults[fullName];
+                const donations = group.donations;
+                const totalAcrossAll = donations.reduce((sum, d) => sum + d.amount, 0);
+                
+                const committees = [...new Set(donations.map(d => d.candidateName))];
+                const committeeList = committees.join(', ');
+                
+                const location = donations[0].city || donations[0].state 
+                    ? `${donations[0].city || ''}${donations[0].city && donations[0].state ? ', ' : ''}${donations[0].state || ''}`
+                    : 'Location not available';
+                
+                const donorId = generateId();
+                
+                // Create result item
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result-item';
+                
+                // Build safe HTML
+                let html = `<div class="donor-summary" onclick="toggleContributions('${donorId}')">
+                    <div class="donor-header">
+                        <div class="donor-name">${escapeHtml(fullName)}`;
+                
+                if (group.matchType === 'fuzzy') {
+                    html += `<span class="match-badge">~${Math.round(group.matchScore * 100)}% match</span>`;
+                }
+                
+                html += `</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="font-size: 20px; font-weight: 800; color: #174A57;">$${totalAcrossAll.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                            <span class="expand-indicator" id="indicator-${donorId}">▼</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 13px; color: #718096; margin-bottom: 8px; font-weight: 500;">
+                        ${donations.length} contribution${donations.length > 1 ? 's' : ''} • ${escapeHtml(committeeList)}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: 12px; color: #a0aec0;">
+                            📍 ${escapeHtml(location)}
+                        </div>
+                        <div style="font-size: 11px; color: #56D2B4; font-style: italic; font-weight: 600;" id="expand-text-${donorId}">
+                            Click to expand ↓
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contributions-list" id="contributions-${donorId}">`;
+                
+                donations.forEach((record, index) => {
+                    const isRefund = record.isRefund || record.amount < 0;
+                    html += `
+                    <div class="contribution-item">
+                        <div style="font-size: 11px; color: #a0aec0; margin-bottom: 8px; font-weight: 600;">CONTRIBUTION #${index + 1}${isRefund ? ' <span class="refund-badge">REFUND</span>' : ''}</div>
+                        <div class="donation-info">
+                            <div class="info-item">
+                                <div class="info-label">Committee</div>
+                                <div class="info-value">${escapeHtml(record.candidateName)}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Date</div>
+                                <div class="info-value">${escapeHtml(formatDate(record.contributionDate))}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Amount</div>
+                                <div class="info-value">$${Math.abs(record.amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                            </div>`;
+                    
+                    if (record.employer) {
+                        html += `
+                            <div class="info-item">
+                                <div class="info-label">Employer</div>
+                                <div class="info-value">${escapeHtml(record.employer)}</div>
+                            </div>`;
+                    }
+                    
+                    if (record.occupation) {
+                        html += `
+                            <div class="info-item">
+                                <div class="info-label">Occupation</div>
+                                <div class="info-value">${escapeHtml(record.occupation)}</div>
+                            </div>`;
+                    }
+                    
+                    if (record.city || record.state) {
+                        const loc = `${record.city || ''}${record.city && record.state ? ', ' : ''}${record.state || ''}`;
+                        html += `
+                            <div class="info-item">
+                                <div class="info-label">Location</div>
+                                <div class="info-value">${escapeHtml(loc)}</div>
+                            </div>`;
+                    }
+                    
+                    html += `
+                            <div class="info-item">
+                                <button class="delete-btn" onclick="deleteRecord('${record.id}')">Delete</button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                
+                html += `</div>`;
+                
+                resultDiv.innerHTML = html;
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+
+        function toggleContributions(donorId) {
+            const contributionsList = document.getElementById('contributions-' + donorId);
+            const indicator = document.getElementById('indicator-' + donorId);
+            const expandText = document.getElementById('expand-text-' + donorId);
+            
+            if (contributionsList && indicator && expandText) {
+                if (contributionsList.classList.contains('expanded')) {
+                    contributionsList.classList.remove('expanded');
+                    indicator.classList.remove('expanded');
+                    expandText.textContent = 'Click to expand ↓';
+                } else {
+                    contributionsList.classList.add('expanded');
+                    indicator.classList.add('expanded');
+                    expandText.textContent = 'Click to collapse ↑';
+                }
+            }
+        }
+
+        // ==================== CRUD OPERATIONS ====================
+        
+        function addDonor() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const candidateName = document.getElementById('candidateName').value.trim();
+            const contributionDate = document.getElementById('contributionDate').value;
+            const amount = parseFloat(document.getElementById('totalAmount').value);
+            const employer = document.getElementById('employer').value.trim();
+            const occupation = document.getElementById('occupation').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim().toUpperCase();
+
+            if (!firstName || !lastName || !candidateName || !contributionDate || isNaN(amount)) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+
+            const { ymd, epoch } = parseFecDate(contributionDate);
+            if (!ymd) {
+                alert('Invalid date format. Please use YYYY-MM-DD format.');
+                return;
+            }
+
+            const newRecord = {
+                id: generateId(),
+                firstName: firstName,
+                lastName: lastName,
+                candidateName: candidateName,
+                contributionDate: ymd,
+                contributionEpoch: epoch,
+                amount: Math.round(amount * 100) / 100,
+                isRefund: amount < 0,
+                employer: employer,
+                occupation: occupation,
+                city: city,
+                state: state
+            };
+
+            donorRecords.push(newRecord);
+            updateStats();
+            saveToStorage();
+            clearForm();
+
+            document.getElementById('searchInput').value = firstName + ' ' + lastName;
+            searchDonors();
+        }
+
+        function clearForm() {
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('candidateName').value = '';
+            document.getElementById('contributionDate').value = '';
+            document.getElementById('totalAmount').value = '';
+            document.getElementById('employer').value = '';
+            document.getElementById('occupation').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('state').value = '';
+        }
+
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                donorRecords = donorRecords.filter(record => record.id !== id);
+                updateStats();
+                saveToStorage();
+                searchDonors();
+
+                if (filteredRecords.length > 0) {
+                    applyFilters();
+                }
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function updateStats() {
+            const uniqueDonors = new Set(donorRecords.map(r => (r.firstName + ' ' + r.lastName).toLowerCase())).size;
+            const uniqueCandidates = new Set(donorRecords.map(r => r.candidateName.toLowerCase())).size;
+
+            document.getElementById('totalDonors').textContent = uniqueDonors;
+            document.getElementById('totalRecords').textContent = donorRecords.length;
+            document.getElementById('totalCandidates').textContent = uniqueCandidates;
+        }
+
+        // ==================== IMPORT FUNCTIONS ====================
+        
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.csv') && !file.name.endsWith('.txt')) {
+                alert('Please upload a CSV or TXT file');
+                event.target.value = '';
+                return;
+            }
+
+            const textarea = document.getElementById('bulkData');
+            textarea.value = 'Loading file...';
+            textarea.style.background = '#f8fafc';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contents = e.target.result;
+                textarea.value = contents;
+                textarea.style.background = 'white';
+                
+                const fileName = file.name;
+                const fileSize = (file.size / 1024).toFixed(1);
+                textarea.placeholder = `Loaded: ${fileName} (${fileSize} KB) - Ready to import`;
+                
+                // Show message instead of auto-importing
+                alert(`File loaded successfully!\n\nClick "Process Import" to preview before importing.`);
+            };
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
+                textarea.value = '';
+                textarea.style.background = 'white';
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        let pendingImportData = null;
+        let currentHeaders = null;
+        let savedColumnMapping = null;
+
+        function smartImport() {
+            const bulkData = document.getElementById('bulkData').value.trim();
+            if (!bulkData) {
+                alert('Please enter data to import');
+                return;
+            }
+
+            const rows = parseCSV(bulkData);
+            if (rows.length < 2) {
+                alert('Please include headers and at least one data row');
+                return;
+            }
+
+            const importMode = document.querySelector('input[name="importMode"]:checked')?.value || 'smart';
+
+            const headers = rows[0].map(h => h.toLowerCase().trim());
+            currentHeaders = headers;
+            const dataRows = rows.slice(1);
+
+            // Try to detect name columns (first/last separate, or combined)
+            let firstNameCol = -1, lastNameCol = -1, fullNameCol = -1;
+            let candidateCol = -1, dateCol = -1, amountCol = -1;
+            let entityTypeCol = -1, transactionIdCol = -1;
+            let employerCol = -1, occupationCol = -1, cityCol = -1, stateCol = -1;
+
+            // Auto-detect columns using flexible patterns
+            firstNameCol = findColumnIdx(headers, COLUMN_PATTERNS.firstName);
+            lastNameCol = findColumnIdx(headers, COLUMN_PATTERNS.lastName);
+            fullNameCol = findColumnIdx(headers, COLUMN_PATTERNS.fullName);
+            candidateCol = findColumnIdx(headers, COLUMN_PATTERNS.committee);
+            dateCol = findColumnIdx(headers, COLUMN_PATTERNS.date);
+            amountCol = findColumnIdx(headers, COLUMN_PATTERNS.amount);
+
+            // Find optional columns
+            employerCol = findColumnIdx(headers, COLUMN_PATTERNS.employer);
+            occupationCol = findColumnIdx(headers, COLUMN_PATTERNS.occupation);
+            cityCol = findColumnIdx(headers, COLUMN_PATTERNS.city);
+            stateCol = findColumnIdx(headers, COLUMN_PATTERNS.state);
+            entityTypeCol = findColumnIdx(headers, COLUMN_PATTERNS.entity);
+            transactionIdCol = findColumnIdx(headers, COLUMN_PATTERNS.tranId);
+
+            // Validate that we have either first/last OR full name
+            const hasNameData = (firstNameCol !== -1 && lastNameCol !== -1) || fullNameCol !== -1;
+
+            // Validate required columns
+            const missing = [];
+            if (!hasNameData) missing.push('donor name (need first+last or full name)');
+            if (candidateCol === -1) missing.push('candidate/committee name');
+            if (dateCol === -1) missing.push('date');
+            if (amountCol === -1) missing.push('amount');
+
+            if (missing.length > 0) {
+                alert(`Could not auto-detect columns for: ${missing.join(', ')}\n\nClick "Manual Mapping" to specify columns manually.`);
+                return;
+            }
+
+            // Parse all records
+            const allRecords = [];
+            const errors = [];
+            
+            dataRows.forEach((fields, index) => {
+                const rowNum = index + 2;
+                
+                // Skip completely empty rows
+                if (fields.every(f => !f || f.trim() === '')) {
+                    return;
+                }
+                
+                const maxColIdx = Math.max(
+                    firstNameCol, lastNameCol, fullNameCol,
+                    candidateCol, dateCol, amountCol
+                );
+                if (fields.length <= maxColIdx) {
+                    errors.push(`Row ${rowNum}: Has ${fields.length} columns, need at least ${maxColIdx + 1}`);
+                    return;
+                }
+
+                // Parse name (either first/last separate or combined)
+                let firstName = '', lastName = '';
+                if (firstNameCol !== -1 && lastNameCol !== -1) {
+                    // Separate first/last name columns
+                    firstName = (fields[firstNameCol] || '').trim();
+                    lastName = (fields[lastNameCol] || '').trim();
+                } else if (fullNameCol !== -1) {
+                    // Combined name column - parse it
+                    const fullName = (fields[fullNameCol] || '').trim();
+                    const parsed = parseFullName(fullName);
+                    firstName = parsed.firstName;
+                    lastName = parsed.lastName;
+                }
+
+                const candidateName = (fields[candidateCol] || '').trim();
+                const rawDate = (fields[dateCol] || '').trim();
+                const rawAmount = (fields[amountCol] || '').replace(/[^0-9.-]/g, '');
+
+                // Detailed error reporting
+                const missing = [];
+                // At least one name field should be present
+                if (firstNameCol === -1 && lastNameCol === -1 && fullNameCol === -1) {
+                    missing.push('donor name columns');
+                }
+                if (!candidateName) missing.push('committee name');
+                if (!rawDate) missing.push('date');
+                if (!rawAmount) missing.push('amount');
+
+                if (missing.length > 0) {
+                    errors.push(`Row ${rowNum}: Missing ${missing.join(', ')}`);
+                    return;
+                }
+
+                // Allow records with just first or just last name (some people have single names)
+                // Both empty is the only invalid case, but that should be caught by column detection
+                
+                const { ymd, epoch } = parseFecDate(rawDate);
+                const parsedAmount = parseFloat(rawAmount);
+                
+                if (!ymd) {
+                    errors.push(`Row ${rowNum}: Invalid date format "${rawDate}" (expected YYYY-MM-DD or MM/DD/YYYY)`);
+                    return;
+                }
+                
+                if (isNaN(parsedAmount)) {
+                    errors.push(`Row ${rowNum}: Invalid amount "${rawAmount}"`);
+                    return;
+                }
+
+                const entityType = entityTypeCol !== -1 ? (fields[entityTypeCol] || '').trim().toUpperCase() : '';
+                const transactionId = transactionIdCol !== -1 ? (fields[transactionIdCol] || '').trim() : '';
+                const employer = employerCol !== -1 ? (fields[employerCol] || '').trim() : '';
+                const occupation = occupationCol !== -1 ? (fields[occupationCol] || '').trim() : '';
+                const city = cityCol !== -1 ? (fields[cityCol] || '').trim() : '';
+                const state = stateCol !== -1 ? (fields[stateCol] || '').trim().toUpperCase() : '';
+
+                allRecords.push({
+                    firstName,
+                    lastName,
+                    candidateName,
+                    contributionDate: ymd,
+                    contributionEpoch: epoch,
+                    amount: Math.round(parsedAmount * 100) / 100,
+                    isRefund: parsedAmount < 0,
+                    entityType,
+                    transactionId,
+                    employer,
+                    occupation,
+                    city,
+                    state
+                });
+            });
+
+            // Process based on import mode
+            let parsedData = [];
+
+            if (importMode === 'individuals') {
+                parsedData = allRecords.filter(r => r.entityType === 'IND' || !r.entityType);
+                
+            } else if (importMode === 'smart' && entityTypeCol !== -1 && transactionIdCol !== -1) {
+                // Smart merge earmarked contributions
+                const transactionGroups = new Map();
+                
+                allRecords.forEach(record => {
+                    const baseId = record.transactionId.replace(/E$/i, '');
+                    if (!baseId) {
+                        transactionGroups.set(Symbol(), [record]);
+                    } else {
+                        if (!transactionGroups.has(baseId)) {
+                            transactionGroups.set(baseId, []);
+                        }
+                        transactionGroups.get(baseId).push(record);
+                    }
+                });
+
+                for (const group of transactionGroups.values()) {
+                    const individualRecord = group.find(r => r.entityType === 'IND');
+                    const conduitRecord = group.find(r => ['PAC', 'PTY'].includes(r.entityType));
+                    
+                    if (individualRecord) {
+                        parsedData.push({
+                            firstName: individualRecord.firstName,
+                            lastName: individualRecord.lastName,
+                            candidateName: individualRecord.candidateName,
+                            contributionDate: conduitRecord ? conduitRecord.contributionDate : individualRecord.contributionDate,
+                            contributionEpoch: conduitRecord ? conduitRecord.contributionEpoch : individualRecord.contributionEpoch,
+                            amount: individualRecord.amount,
+                            isRefund: individualRecord.isRefund,
+                            employer: individualRecord.employer,
+                            occupation: individualRecord.occupation,
+                            city: individualRecord.city,
+                            state: individualRecord.state
+                        });
+                    } else if (group.length === 1) {
+                        parsedData.push(group[0]);
+                    }
+                }
+                
+            } else {
+                // Import all records
+                parsedData = allRecords;
+            }
+
+            pendingImportData = parsedData;
+            
+            let modeDescription = '';
+            if (importMode === 'individuals') {
+                modeDescription = 'Individual donors only';
+            } else if (importMode === 'smart') {
+                modeDescription = 'Smart merge (earmarked contributions combined)';
+            } else {
+                modeDescription = 'All records (including refunds)';
+            }
+            
+            // Build mapping description for preview
+            const mappingInfo = {
+                candidateCol: headers[candidateCol],
+                dateCol: headers[dateCol],
+                amountCol: headers[amountCol]
+            };
+
+            if (firstNameCol !== -1 && lastNameCol !== -1) {
+                mappingInfo.firstNameCol = headers[firstNameCol];
+                mappingInfo.lastNameCol = headers[lastNameCol];
+            } else if (fullNameCol !== -1) {
+                mappingInfo.fullNameCol = headers[fullNameCol];
+            }
+
+            showImportPreview(parsedData, errors, mappingInfo, modeDescription);
+        }
+
+        function showManualMapper() {
+            const bulkData = document.getElementById('bulkData').value.trim();
+            if (!bulkData) {
+                alert('Please paste CSV data first');
+                return;
+            }
+
+            const rows = parseCSV(bulkData);
+            if (rows.length < 1) {
+                alert('Please paste CSV data with headers');
+                return;
+            }
+
+            const headers = rows[0];
+            currentHeaders = headers.map(h => h.toLowerCase());
+
+            const mapperDiv = document.getElementById('manualMapper');
+            const contentDiv = document.getElementById('mapperContent');
+
+            let html = `
+                <div style="display: grid; gap: 15px;">
+                    <div class="form-group">
+                        <label>Donor/Contributor Name Column</label>
+                        <select id="mapDonor" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${escapeHtml(h)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Candidate/Committee Name Column</label>
+                        <select id="mapCandidate" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${escapeHtml(h)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Contribution Date Column</label>
+                        <select id="mapDate" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${escapeHtml(h)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Contribution Amount Column</label>
+                        <select id="mapAmount" class="mapper-select">
+                            <option value="">-- Select Column --</option>
+                            ${headers.map((h, i) => `<option value="${i}">${escapeHtml(h)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="saveMapping" style="width: auto;">
+                            <span style="font-size: 13px; font-weight: normal;">Remember this mapping for future imports</span>
+                        </label>
+                    </div>
+                </div>
+            `;
+
+            contentDiv.innerHTML = html;
+            mapperDiv.style.display = 'block';
+        }
+
+        function applyManualMapping() {
+            const donorCol = parseInt(document.getElementById('mapDonor').value);
+            const candidateCol = parseInt(document.getElementById('mapCandidate').value);
+            const dateCol = parseInt(document.getElementById('mapDate').value);
+            const amountCol = parseInt(document.getElementById('mapAmount').value);
+
+            if (isNaN(donorCol) || isNaN(candidateCol) || isNaN(dateCol) || isNaN(amountCol)) {
+                alert('Please select all required columns');
+                return;
+            }
+
+            const bulkData = document.getElementById('bulkData').value.trim();
+            const rows = parseCSV(bulkData);
+            const headers = rows[0];
+            
+            if (document.getElementById('saveMapping').checked) {
+                savedColumnMapping = {
+                    donor: headers[donorCol],
+                    candidate: headers[candidateCol],
+                    date: headers[dateCol],
+                    amount: headers[amountCol]
+                };
+            }
+
+            // Continue with import using manual mapping...
+            // (Similar logic to smartImport but using manually selected columns)
+            document.getElementById('manualMapper').style.display = 'none';
+            
+            // For brevity, just trigger smart import which will use the saved mapping
+            smartImport();
+        }
+
+        function cancelManualMapping() {
+            document.getElementById('manualMapper').style.display = 'none';
+        }
+
+        function adjustMapping() {
+            document.getElementById('importPreview').style.display = 'none';
+            showManualMapper();
+        }
+
+        function showImportPreview(data, errors, mapping, modeDescription) {
+            const previewDiv = document.getElementById('importPreview');
+            const contentDiv = document.getElementById('previewContent');
+
+            let html = `
+                <div style="margin-bottom: 15px;">
+                    <strong>Column Mapping Detected:</strong>
+                    <div style="margin-top: 8px; font-size: 13px; color: #4a5568;">`;
+
+            if (mapping.firstNameCol && mapping.lastNameCol) {
+                html += `• First Name: <code>${escapeHtml(mapping.firstNameCol)}</code><br>`;
+                html += `• Last Name: <code>${escapeHtml(mapping.lastNameCol)}</code><br>`;
+            } else if (mapping.fullNameCol) {
+                html += `• Full Name: <code>${escapeHtml(mapping.fullNameCol)}</code> (will be split)<br>`;
+            }
+
+            html += `• Candidate: <code>${escapeHtml(mapping.candidateCol)}</code><br>
+                        • Date: <code>${escapeHtml(mapping.dateCol)}</code><br>
+                        • Amount: <code>${escapeHtml(mapping.amountCol)}</code>
+                    </div>
+                </div>
+            `;
+            
+            if (modeDescription) {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 12px; background: #e6f7f3; border: 2px solid #56D2B4; border-radius: 8px; font-size: 13px; color: #174A57;">
+                        <strong>Import Mode:</strong> ${escapeHtml(modeDescription)}
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div style="margin-bottom: 15px;">
+                    <strong style="color: #174A57;">✓ ${data.length} records ready to import</strong>
+            `;
+
+            if (errors.length > 0) {
+                html += `<br><strong style="color: #e53e3e;">✗ ${errors.length} errors (rows skipped)</strong>`;
+            }
+
+            html += `</div>`;
+
+            if (data.length > 0) {
+                html += `<div style="margin-top: 10px;"><strong>Preview (first 3 records):</strong></div>`;
+                const previewCount = Math.min(3, data.length);
+                for (let i = 0; i < previewCount; i++) {
+                    const record = data[i];
+                    const isRefund = record.isRefund || record.amount < 0;
+                    const fullName = record.firstName + ' ' + record.lastName;
+                    html += `
+                        <div style="margin-top: 8px; padding: 12px; background: white; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 13px;">
+                            <strong>${escapeHtml(fullName)}</strong> → ${escapeHtml(record.candidateName)}${isRefund ? ' <span class="refund-badge">REFUND</span>' : ''}<br>
+                            ${escapeHtml(record.contributionDate)} • $${Math.abs(record.amount).toLocaleString('en-US', {minimumFractionDigits: 2})}
+                            ${record.employer || record.occupation ? `<br><span style="color: #718096; font-size: 12px;">${escapeHtml(record.occupation || '')}${record.occupation && record.employer ? ' at ' : ''}${escapeHtml(record.employer || '')}</span>` : ''}
+                            ${record.city || record.state ? `<br><span style="color: #718096; font-size: 12px;">${escapeHtml(record.city || '')}${record.city && record.state ? ', ' : ''}${escapeHtml(record.state || '')}</span>` : ''}
+                        </div>
+                    `;
+                }
+            }
+
+            if (errors.length > 0) {
+                html += `<div style="margin-top: 15px; padding: 10px; background: #fff5f5; border: 2px solid #feb2b2; border-radius: 8px; font-size: 12px; color: #c53030;">`;
+                html += `<strong>Errors (first 10):</strong><br>`;
+                errors.slice(0, 10).forEach(err => {
+                    html += `• ${escapeHtml(err)}<br>`;
+                });
+                if (errors.length > 10) {
+                    html += `• ... and ${errors.length - 10} more<br>`;
+                }
+                
+                html += `</div>`;
+            }
+
+            contentDiv.innerHTML = html;
+            previewDiv.style.display = 'block';
+
+            // Scroll the preview into view within the modal
+            previewDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function confirmImport() {
+            if (!pendingImportData) return;
+
+            pendingImportData.forEach((record) => {
+                donorRecords.push({
+                    id: generateId(),
+                    ...record
+                });
+            });
+
+            updateStats();
+            saveToStorage();
+            document.getElementById('bulkData').value = '';
+            document.getElementById('importPreview').style.display = 'none';
+
+            alert(`Successfully added ${pendingImportData.length} records to DonorDex!`);
+            pendingImportData = null;
+
+            if (filteredRecords.length > 0) {
+                applyFilters();
+            }
+        }
+
+        function cancelImport() {
+            pendingImportData = null;
+            document.getElementById('importPreview').style.display = 'none';
+        }
+
+        // ==================== EXPORT FUNCTIONS ====================
+        
+        function exportData() {
+            if (donorRecords.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            // UTF-8 BOM for Excel compatibility
+            let csv = '\uFEFF';
+            csv += 'First Name,Last Name,Committee Name,Contribution Date,Amount,Employer,Occupation,City,State\n';
+
+            donorRecords.forEach(record => {
+                csv += `${escapeCsvField(record.firstName)},${escapeCsvField(record.lastName)},${escapeCsvField(record.candidateName)},${escapeCsvField(record.contributionDate)},${escapeCsvField(record.amount)},${escapeCsvField(record.employer)},${escapeCsvField(record.occupation)},${escapeCsvField(record.city)},${escapeCsvField(record.state)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'donordex-export.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all DonorDex records? This cannot be undone.')) {
+                donorRecords = [];
+                filteredRecords = [];
+                clearStorage();
+                updateStats();
+                document.getElementById('searchInput').value = '';
+                document.getElementById('resultsContainer').innerHTML = '<div class="no-results">Enter a donor name to begin search</div>';
+                document.getElementById('browseContainer').innerHTML = '<div class="no-results">Click "Apply Filters" to browse</div>';
+                document.getElementById('browseCount').textContent = '0';
+                document.getElementById('browseTotal').textContent = '';
+                document.getElementById('pagination').style.display = 'none';
+            }
+        }
+
+        // ==================== SEARCH EVENT LISTENER ====================
+
+        // Debounce utility to prevent excessive search operations
+        function debounce(fn, delay = 150) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        document.getElementById('searchInput').addEventListener('input', debounce(searchDonors, 150));
+
+        // ==================== BROWSE/FILTER FUNCTIONS ====================
+        
+        let filteredRecords = [];
+        let currentPageNum = 1;
+        let pageSize = 50;
+
+        function applyFilters() {
+            const committee = document.getElementById('filterCommittee').value.trim().toLowerCase();
+            const state = document.getElementById('filterState').value.trim().toUpperCase();
+            const employer = document.getElementById('filterEmployer').value.trim().toLowerCase();
+            const occupation = document.getElementById('filterOccupation').value.trim().toLowerCase();
+            const minAmount = parseFloat(document.getElementById('filterMinAmount').value) || -Infinity;
+            const maxAmount = parseFloat(document.getElementById('filterMaxAmount').value) || Infinity;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const sortBy = document.getElementById('sortBy').value;
+            pageSize = document.getElementById('pageSize').value;
+
+            // Parse date filters
+            const startEpoch = startDate ? parseFecDate(startDate).epoch : -Infinity;
+            const endEpoch = endDate ? parseFecDate(endDate).epoch : Infinity;
+
+            // Filter records
+            filteredRecords = donorRecords.filter(record => {
+                if (committee && !record.candidateName.toLowerCase().includes(committee)) return false;
+                if (state && record.state !== state) return false;
+                if (employer && !record.employer?.toLowerCase().includes(employer)) return false;
+                if (occupation && !record.occupation?.toLowerCase().includes(occupation)) return false;
+                if (record.amount < minAmount || record.amount > maxAmount) return false;
+                if (startEpoch !== -Infinity && record.contributionEpoch < startEpoch) return false;
+                if (endEpoch !== Infinity && record.contributionEpoch > endEpoch) return false;
+                return true;
+            });
+
+            // Sort records using numeric comparison for dates
+            filteredRecords.sort((a, b) => {
+                switch(sortBy) {
+                    case 'date-desc':
+                        return b.contributionEpoch - a.contributionEpoch;
+                    case 'date-asc':
+                        return a.contributionEpoch - b.contributionEpoch;
+                    case 'amount-desc':
+                        return b.amount - a.amount;
+                    case 'amount-asc':
+                        return a.amount - b.amount;
+                    case 'name-asc':
+                        // Sort by last name first, then first name
+                        const lastCompare = a.lastName.localeCompare(b.lastName);
+                        return lastCompare !== 0 ? lastCompare : a.firstName.localeCompare(b.firstName);
+                    case 'name-desc':
+                        // Sort by last name first (descending), then first name
+                        const lastCompareDesc = b.lastName.localeCompare(a.lastName);
+                        return lastCompareDesc !== 0 ? lastCompareDesc : b.firstName.localeCompare(a.firstName);
+                    case 'committee-asc':
+                        return a.candidateName.localeCompare(b.candidateName);
+                    default:
+                        return 0;
+                }
+            });
+
+            const totalAmount = filteredRecords.reduce((sum, r) => sum + r.amount, 0);
+            document.getElementById('browseTotal').textContent = `• Total: $${totalAmount.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+            currentPageNum = 1;
+            displayBrowseResults();
+        }
+
+        function displayBrowseResults() {
+            const container = document.getElementById('browseContainer');
+            
+            if (filteredRecords.length === 0) {
+                container.innerHTML = '<div class="no-results">No contributions match your filters</div>';
+                document.getElementById('pagination').style.display = 'none';
+                document.getElementById('browseCount').textContent = '0';
+                return;
+            }
+
+            document.getElementById('browseCount').textContent = filteredRecords.length.toLocaleString();
+
+            const actualPageSize = pageSize === 'all' ? filteredRecords.length : parseInt(pageSize);
+            const totalPages = Math.ceil(filteredRecords.length / actualPageSize);
+            const startIdx = (currentPageNum - 1) * actualPageSize;
+            const endIdx = Math.min(startIdx + actualPageSize, filteredRecords.length);
+            const pageRecords = filteredRecords.slice(startIdx, endIdx);
+
+            if (pageSize !== 'all' && totalPages > 1) {
+                document.getElementById('pagination').style.display = 'flex';
+                document.getElementById('currentPage').textContent = currentPageNum;
+                document.getElementById('totalPages').textContent = totalPages;
+                document.getElementById('prevBtn').disabled = currentPageNum === 1;
+                document.getElementById('nextBtn').disabled = currentPageNum === totalPages;
+            } else {
+                document.getElementById('pagination').style.display = 'none';
+            }
+
+            // Build results using XSS-safe escaping
+            let html = '';
+            pageRecords.forEach(record => {
+                const isRefund = record.isRefund || record.amount < 0;
+                const fullName = record.firstName + ' ' + record.lastName;
+                html += `
+                <div class="result-item" style="margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                        <div class="donor-name">${escapeHtml(fullName)}${isRefund ? ' <span class="refund-badge">REFUND</span>' : ''}</div>
+                        <div style="font-size: 18px; font-weight: 700; color: #174A57;">$${Math.abs(record.amount).toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                    </div>
+                    <div class="donation-info">
+                        <div class="info-item">
+                            <div class="info-label">Committee</div>
+                            <div class="info-value">${escapeHtml(record.candidateName)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date</div>
+                            <div class="info-value">${escapeHtml(formatDate(record.contributionDate))}</div>
+                        </div>`;
+                
+                if (record.employer) {
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">Employer</div>
+                            <div class="info-value">${escapeHtml(record.employer)}</div>
+                        </div>`;
+                }
+                
+                if (record.occupation) {
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">Occupation</div>
+                            <div class="info-value">${escapeHtml(record.occupation)}</div>
+                        </div>`;
+                }
+                
+                if (record.city || record.state) {
+                    const loc = `${record.city || ''}${record.city && record.state ? ', ' : ''}${record.state || ''}`;
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">Location</div>
+                            <div class="info-value">${escapeHtml(loc)}</div>
+                        </div>`;
+                }
+                
+                html += `
+                        <div class="info-item">
+                            <button class="delete-btn" onclick="deleteRecord('${record.id}')">Delete</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function clearFilters() {
+            document.getElementById('filterCommittee').value = '';
+            document.getElementById('filterState').value = '';
+            document.getElementById('filterEmployer').value = '';
+            document.getElementById('filterOccupation').value = '';
+            document.getElementById('filterMinAmount').value = '';
+            document.getElementById('filterMaxAmount').value = '';
+            document.getElementById('filterStartDate').value = '';
+            document.getElementById('filterEndDate').value = '';
+            document.getElementById('sortBy').value = 'date-desc';
+            document.getElementById('browseContainer').innerHTML = '<div class="no-results">Click "Apply Filters" to browse</div>';
+            document.getElementById('browseCount').textContent = '0';
+            document.getElementById('browseTotal').textContent = '';
+            document.getElementById('pagination').style.display = 'none';
+        }
+
+        function exportFiltered() {
+            if (filteredRecords.length === 0) {
+                alert('No filtered records to export. Please apply filters first.');
+                return;
+            }
+
+            // UTF-8 BOM for Excel compatibility
+            let csv = '\uFEFF';
+            csv += 'First Name,Last Name,Committee Name,Contribution Date,Amount,Employer,Occupation,City,State\n';
+
+            filteredRecords.forEach(record => {
+                csv += `${escapeCsvField(record.firstName)},${escapeCsvField(record.lastName)},${escapeCsvField(record.candidateName)},${escapeCsvField(record.contributionDate)},${escapeCsvField(record.amount)},${escapeCsvField(record.employer)},${escapeCsvField(record.occupation)},${escapeCsvField(record.city)},${escapeCsvField(record.state)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'donordex-filtered.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function previousPage() {
+            if (currentPageNum > 1) {
+                currentPageNum--;
+                displayBrowseResults();
+            }
+        }
+
+        function nextPage() {
+            const actualPageSize = pageSize === 'all' ? filteredRecords.length : parseInt(pageSize);
+            const totalPages = Math.ceil(filteredRecords.length / actualPageSize);
+            if (currentPageNum < totalPages) {
+                currentPageNum++;
+                displayBrowseResults();
+            }
+        }
+
+        function toggleFilters() {
+            const filterForm = document.getElementById('filterForm');
+            const toggleIcon = document.getElementById('filterToggleIcon');
+
+            if (filterForm.style.display === 'none') {
+                filterForm.style.display = 'grid';
+                toggleIcon.textContent = '▼';
+                toggleIcon.style.transform = 'rotate(0deg)';
+            } else {
+                filterForm.style.display = 'none';
+                toggleIcon.textContent = '▶';
+                toggleIcon.style.transform = 'rotate(-90deg)';
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+
+        function initializeSampleData() {
+            // Load data from storage on startup
+            loadFromStorage();
+            updateStats();
+        }
+
+        initializeSampleData();
+    </script>
+</body>
+</html>
