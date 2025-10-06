@@ -4,6 +4,9 @@
  */
 
 const App = {
+    // PWA install prompt event
+    deferredPrompt: null,
+
     /**
      * Initialize the application
      */
@@ -12,6 +15,12 @@ const App = {
             // Initialize Dexie database
             await db.open();
             console.log('Database initialized successfully');
+
+            // Register service worker for PWA support
+            await this.registerServiceWorker();
+
+            // Setup PWA install prompt
+            this.setupInstallPrompt();
 
             // Update stats on load
             await this.updateStats();
@@ -23,6 +32,104 @@ const App = {
         } catch (error) {
             console.error('Error initializing DonorDex:', error);
             alert('Error initializing database. Please refresh the page.');
+        }
+    },
+
+    /**
+     * Register service worker for offline support
+     */
+    async registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                console.log('Service Worker registered:', registration.scope);
+
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('Service Worker update found');
+
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New service worker available, show update prompt
+                            this.showUpdatePrompt();
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Service Worker registration failed:', error);
+            }
+        }
+    },
+
+    /**
+     * Setup PWA install prompt
+     */
+    setupInstallPrompt() {
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            this.deferredPrompt = e;
+            // Show install button/banner
+            this.showInstallBanner();
+        });
+
+        // Listen for successful installation
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA installed successfully');
+            this.deferredPrompt = null;
+            this.hideInstallBanner();
+        });
+    },
+
+    /**
+     * Show install banner
+     */
+    showInstallBanner() {
+        const banner = document.getElementById('installBanner');
+        if (banner) {
+            banner.style.display = 'flex';
+        }
+    },
+
+    /**
+     * Hide install banner
+     */
+    hideInstallBanner() {
+        const banner = document.getElementById('installBanner');
+        if (banner) {
+            banner.style.display = 'none';
+        }
+    },
+
+    /**
+     * Trigger PWA install
+     */
+    async installPWA() {
+        if (!this.deferredPrompt) {
+            return;
+        }
+
+        // Show the install prompt
+        this.deferredPrompt.prompt();
+
+        // Wait for the user to respond to the prompt
+        const { outcome } = await this.deferredPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+
+        // Clear the deferred prompt
+        this.deferredPrompt = null;
+        this.hideInstallBanner();
+    },
+
+    /**
+     * Show update prompt for new service worker
+     */
+    showUpdatePrompt() {
+        if (confirm('A new version of DonorDex is available. Reload to update?')) {
+            window.location.reload();
         }
     },
 

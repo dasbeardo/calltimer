@@ -4,9 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DonorDex - Political Contribution Research</title>
+    <meta name="description" content="Track and analyze political contributions from FEC data - Gotta track 'em all!">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#174A57">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#174A57">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#174A57">
+
+    <!-- iOS-specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DonorDex">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- iOS Splash Screens (optional - can be added later) -->
+    <link rel="apple-touch-startup-image" href="icons/icon-512.png">
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#174A57">
+    <meta name="msapplication-TileImage" content="icons/icon-144.png">
+
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- PWA Install Banner -->
+    <div id="installBanner" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #174A57 0%, #1a5563 100%); color: white; padding: 12px 16px; z-index: 2000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); align-items: center; justify-content: space-between; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+            <svg width="40" height="40" viewBox="0 0 100 100" style="flex-shrink: 0;">
+                <rect x="10" y="10" width="80" height="80" rx="8" fill="#56D2B4" stroke="white" stroke-width="3"/>
+                <path d="M 35 37 L 45 45 L 65 28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <div>
+                <div style="font-weight: 600; font-size: 14px;">Install DonorDex</div>
+                <div style="font-size: 12px; opacity: 0.9;">Install as an app for quick access</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+            <button onclick="App.installPWA()" style="background: #56D2B4; color: #174A57; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">Install</button>
+            <button onclick="App.hideInstallBanner()" style="background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">Later</button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="header-content">
